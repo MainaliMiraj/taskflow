@@ -1,12 +1,19 @@
 "use client";
 
 import { useState } from "react";
-
 import { ChevronDownIcon } from "@heroicons/react/24/outline";
 import { FaTasks } from "react-icons/fa";
+import { useRouter } from "next/navigation";
+import { logout } from "@/lib/auth";
 
 export default function DashboardHeader() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    await logout();
+    router.push("/login");
+  };
 
   return (
     <header className="w-full bg-white border-b shadow-sm sticky top-0 z-30 mb-5">
@@ -51,7 +58,10 @@ export default function DashboardHeader() {
                     </button>
                   </li>
                   <li>
-                    <button className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 border-t">
+                    <button
+                      onClick={handleLogout}
+                      className="block w-full text-left px-4 py-2 hover:bg-gray-100 text-gray-700 border-t"
+                    >
                       Logout
                     </button>
                   </li>

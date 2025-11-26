@@ -4,12 +4,18 @@ import jwt from "jsonwebtoken";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
 
+export function verifyToken(token: string) {
+  return jwt.verify(token, process.env.JWT_SECRET!);
+}
+
 export async function POST(req: NextRequest) {
   try {
     await connectDB();
 
     const body = await req.json();
+    console.log("Login request received:", body);
     const { email, password } = body;
+    console.log("Checking DB for:", email);
 
     // 1. Validate input
     if (!email || !password) {
@@ -21,6 +27,7 @@ export async function POST(req: NextRequest) {
 
     // 2. Find the user by email
     const user = await User.findOne({ email: email.toLowerCase().trim() });
+    console.log("User found:", user);
 
     if (!user) {
       return NextResponse.json(
@@ -30,7 +37,9 @@ export async function POST(req: NextRequest) {
     }
 
     // 3. Validate password (compare hashed)
+    console.log("Comparing password...");
     const isPasswordValid = await bcrypt.compare(password, user.password);
+    console.log("Password match:", isPasswordValid);
 
     if (!isPasswordValid) {
       return NextResponse.json(
@@ -58,7 +67,8 @@ export async function POST(req: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
-
+    console.log("Token set in cookie.", token);
+    verifyToken(token);
     return response;
   } catch (error) {
     console.error("Login error:", error);

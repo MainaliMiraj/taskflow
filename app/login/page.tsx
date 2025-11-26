@@ -21,7 +21,6 @@ export default function LoginPage() {
         },
         body: JSON.stringify({ email, password }),
       });
-
       if (!res.ok) {
         const data = await res.json();
         alert(data.message || "Invalid email or password");
@@ -32,6 +31,7 @@ export default function LoginPage() {
       // Login success → redirect to dashboard
       router.push("/dashboard");
     } catch (error) {
+      console.log("error", error);
       console.error("Login error:", error);
       alert("Something went wrong. Try again.");
     } finally {
