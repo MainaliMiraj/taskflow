@@ -32,25 +32,37 @@ A clean, modern, multi-page Task Management App built with Next.js 14+ (App Rout
 ## Project Structure
 
 ```
-task-management-app/
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx         # Root layout with navigation
-│   ├── page.tsx           # Dashboard page
-│   ├── add/page.tsx       # Add task page
-│   └── edit/[id]/page.tsx # Edit task page
-├── components/            # Reusable React components
-│   ├── Header.tsx
-│   ├── TaskCard.tsx
-│   ├── TaskForm.tsx
+taskflow/
+├── app/                             # Next.js App Router entrypoint
+│   ├── globals.css                  # Global styles
+│   ├── layout.tsx                   # Root layout with nav + providers
+│   ├── page.tsx                     # Marketing/landing page
+│   ├── dashboard/page.tsx           # Dashboard with task list + filters
+│   ├── add/page.tsx                 # Add task form
+│   ├── edit/[id]/page.tsx           # Edit task form
+│   ├── login/page.tsx               # Login form
+│   ├── register/page.tsx            # Registration form
+│   ├── forgot-password/page.tsx     # Forgot password flow
+│   └── reset-password/[token]/page.tsx # Reset password flow
+├── components/                      # Shared UI components
+│   ├── DashboardHeader.tsx
 │   ├── FilterBar.tsx
 │   ├── SearchBar.tsx
-│   └── SortControls.tsx
-├── hooks/                 # Custom React hooks
-│   └── useTaskStore.ts   # Task management logic
-├── types/                 # TypeScript type definitions
+│   ├── SortControls.tsx
+│   ├── TaskCard.tsx
+│   └── TaskForm.tsx
+├── context/                         # React context providers
+│   └── TaskContext.tsx
+├── reducer/                         # Reducers for shared state
+│   └── taskReducer.ts
+├── types/                           # Reusable TypeScript definitions
 │   └── task.ts
-├── tests/                 # Playwright test files
-├── public/                # Static assets
+├── tests/                           # Playwright specs and docs
+│   ├── README.md
+│   └── example.spec.ts
+├── playwright.config.ts             # Playwright configuration
+├── tailwind.config.js               # Tailwind setup
+├── tsconfig.json                    # TypeScript configuration
 └── README.md
 ```
 
