@@ -2,13 +2,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
-import {
-  FaTasks,
-  FaChartLine,
-  FaBell,
-  FaCheckCircle,
-  FaArrowRight,
-} from "react-icons/fa";
+import { FaTasks, FaCheckCircle, FaArrowRight } from "react-icons/fa";
 
 export default function LandingPage() {
   const router = useRouter();

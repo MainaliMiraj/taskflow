@@ -37,7 +37,7 @@ export default function EditTaskPage() {
 
     try {
       updateTask(taskId, formData);
-      router.push("/");
+      router.push("/dashboard");
     } catch (error) {
       console.error("Error updating task:", error);
       alert("Failed to update task. Please try again.");
@@ -47,7 +47,7 @@ export default function EditTaskPage() {
   };
 
   const handleCancel = () => {
-    router.push("/");
+    router.push("/dashboard");
   };
 
   if (isLoading) {
