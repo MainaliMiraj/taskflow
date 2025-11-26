@@ -1,31 +1,41 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleLogin = async (e: any) => {
     e.preventDefault();
     setLoading(true);
 
-    const res: any = await signIn("credentials", {
-      email,
-      password,
-      redirect: false,
-    });
+    try {
+      const res = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
 
-    setLoading(false);
+      if (!res.ok) {
+        const data = await res.json();
+        alert(data.message || "Invalid email or password");
+        setLoading(false);
+        return;
+      }
 
-    if (res.ok) {
-      router.push("/");
-    } else {
-      alert("Invalid email or password");
+      // Login success → redirect to dashboard
+      router.push("/dashboard");
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Try again.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -68,6 +78,7 @@ export default function LoginPage() {
           >
             {loading ? "Logging in..." : "Login"}
           </button>
+
           <p className="text-center text-sm mt-4">
             <a
               href="/forgot-password"
