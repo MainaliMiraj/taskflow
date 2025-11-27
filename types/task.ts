@@ -1,7 +1,7 @@
 // Task type definitions for the Task Management App
 
 export type TaskPriority = "Low" | "Medium" | "High";
-export type TaskStatus = "Todo" | "In Progress" | "Done";
+export type TaskStatus = "pending" | "in-progress" | "completed";
 
 export interface Task {
   id: string;

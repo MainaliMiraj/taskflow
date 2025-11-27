@@ -9,13 +9,15 @@ export async function POST(req: Request) {
   const token = req.cookies.get("token")?.value;
   const decoded: any = jwt.verify(token!, process.env.JWT_SECRET!);
 
-  const { title, description, status } = await req.json();
+  const { title, description, status, dueDate, priority } = await req.json();
 
   const newTask = await Task.create({
     userId: decoded.userId,
     title,
     description,
     status: status || "pending",
+    dueDate,
+    priority: priority || "Low",
   });
 
   return NextResponse.json({
@@ -29,7 +31,6 @@ export async function GET(req: Request) {
 
   const token = req.cookies.get("token")?.value;
   const decoded: any = jwt.verify(token, process.env.JWT_SECRET!);
-
 
   const tasks = await Task.find({ userId: decoded.userId }).sort({
     createdAt: -1,
