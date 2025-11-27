@@ -1,7 +1,8 @@
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
-  const { pathname } = req.nextUrl;
+  const token = req.cookies.get("token")?.value;
 
   const publicRoutes = [
     "/login",
@@ -10,17 +11,17 @@ export function middleware(req: NextRequest) {
     "/reset-password",
   ];
 
+  const { pathname } = req.nextUrl;
+
   if (publicRoutes.some((route) => pathname.startsWith(route))) {
     return NextResponse.next();
   }
 
-  const token = req.cookies.get("token")?.value;
-
+  // CHECK ONLY FOR TOKEN — NO JWT VERIFY
   if (!token) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
-  // Do NOT verify JWT here (Edge can't run crypto)
   return NextResponse.next();
 }
 

@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function RegisterPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -15,7 +16,10 @@ export default function RegisterPage() {
 
     const res = await fetch("/api/auth/register", {
       method: "POST",
-      body: JSON.stringify({ email, password }),
+      body: JSON.stringify({ email, password, name }),
+      headers: {
+        "Content-Type": "application/json",
+      },
     });
 
     setLoading(false);
@@ -36,6 +40,18 @@ export default function RegisterPage() {
         </h2>
 
         <form onSubmit={handleRegister} className="space-y-4">
+          <div>
+            <label className="text-sm font-medium text-gray-600">
+              Username
+            </label>
+            <input
+              type="name"
+              required
+              className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 mt-1"
+              placeholder="Enter your username"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
           <div>
             <label className="text-sm font-medium text-gray-600">Email</label>
             <input

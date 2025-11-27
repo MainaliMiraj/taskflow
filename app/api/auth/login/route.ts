@@ -13,9 +13,7 @@ export async function POST(req: NextRequest) {
     await connectDB();
 
     const body = await req.json();
-    console.log("Login request received:", body);
-    const { email, password } = body;
-    console.log("Checking DB for:", email);
+    const { email, password, description } = body;
 
     // 1. Validate input
     if (!email || !password) {
@@ -25,9 +23,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 2. Find the user by email
     const user = await User.findOne({ email: email.toLowerCase().trim() });
-    console.log("User found:", user);
+    // if (!description) {
+    //   return NextResponse.json(
+    //     { message: "Description is required" },
+    //     { status: 400 }
+    //   );
+    
+    // }
 
     if (!user) {
       return NextResponse.json(
@@ -36,10 +39,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // 3. Validate password (compare hashed)
-    console.log("Comparing password...");
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    console.log("Password match:", isPasswordValid);
 
     if (!isPasswordValid) {
       return NextResponse.json(
@@ -67,7 +67,6 @@ export async function POST(req: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 7, // 7 days
     });
-    console.log("Token set in cookie.", token);
     verifyToken(token);
     return response;
   } catch (error) {
