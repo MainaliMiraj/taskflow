@@ -70,6 +70,15 @@ export default function Dashboard() {
             Manage your tasks efficiently with filters and sorting
           </p>
         </div>
+        <div>
+          <button
+            onClick={handleAddTask}
+            className="btn-primary"
+            data-testid="add-task-button"
+          >
+            + Add Task
+          </button>
+        </div>
       </div>
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
