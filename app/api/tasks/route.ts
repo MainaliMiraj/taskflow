@@ -7,7 +7,6 @@ export async function POST(req: Request) {
   await connectDB();
 
   const token = req.cookies.get("token")?.value;
-  console.log(token)
   const decoded: any = jwt.verify(token!, process.env.JWT_SECRET!);
 
   const { title, description, status } = await req.json();

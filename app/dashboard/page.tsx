@@ -58,7 +58,6 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
         <div>
           <h1
@@ -72,8 +71,6 @@ export default function Dashboard() {
           </p>
         </div>
       </div>
-
-      {/* Search and Filters */}
       <div className="space-y-4">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
@@ -99,16 +96,12 @@ export default function Dashboard() {
           onClearFilters={handleClearFilters}
         />
       </div>
-
-      {/* Results Summary */}
       <div className="flex justify-between items-center">
         <p className="text-sm text-gray-600">
           Showing {filteredAndSortedTasks.length} of {tasks.length} tasks
           {hasActiveFilters && " (filtered)"}
         </p>
       </div>
-
-      {/* Tasks Grid */}
       {filteredAndSortedTasks.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
