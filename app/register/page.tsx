@@ -36,7 +36,7 @@ export default function RegisterPage() {
     <div className=" flex items-center justify-center  px-4 ">
       <div className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
-          Create an Account ✨
+          Create an Account
         </h2>
 
         <form onSubmit={handleRegister} className="space-y-4">
@@ -78,7 +78,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="w-full bg-primary-600 text-white py-2 rounded-lg hover:bg-primary-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             {loading ? "Creating account..." : "Sign Up"}
           </button>
@@ -86,7 +86,7 @@ export default function RegisterPage() {
 
         <p className="text-center text-sm mt-4">
           Already have an account?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
+          <a href="/login" className="text-indigo-600 hover:underline">
             Login
           </a>
         </p>

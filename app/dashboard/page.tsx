@@ -73,7 +73,7 @@ export default function Dashboard() {
         <div>
           <button
             onClick={handleAddTask}
-            className="btn-primary"
+            className="btn-primary rounded-none"
             data-testid="add-task-button"
           >
             + Add Task
@@ -81,7 +81,7 @@ export default function Dashboard() {
         </div>
       </div>
       <div className="space-y-4">
-        <div className="flex flex-col sm:flex-row gap-4">
+        <div className="flex flex-col gap-4">
           <div className="flex-1">
             <SearchBar
               searchTerm={searchTerm}
@@ -139,7 +139,7 @@ export default function Dashboard() {
           {!hasActiveFilters && (
             <button
               onClick={handleAddTask}
-              className="btn-primary"
+              className="btn-primary rounded-none"
               data-testid="create-first-task"
             >
               Create Your First Task

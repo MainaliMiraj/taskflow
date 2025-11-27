@@ -74,7 +74,7 @@ export default function LoginPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
+            className="w-full bg-primary-600 text-white py-2  hover:bg-primary-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
           >
             {loading ? "Logging in..." : "Login"}
           </button>
@@ -82,7 +82,7 @@ export default function LoginPage() {
           <p className="text-center text-sm mt-4">
             <a
               href="/forgot-password"
-              className="text-blue-600 hover:underline"
+              className="text-primary-600 hover:underline"
             >
               Forgot password?
             </a>
@@ -91,7 +91,7 @@ export default function LoginPage() {
 
         <p className="text-center text-sm mt-4">
           Don’t have an account?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <a href="/register" className="text-primary-600 hover:underline">
             Create one
           </a>
         </p>
