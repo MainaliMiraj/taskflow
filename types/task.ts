@@ -1,5 +1,3 @@
-// Task type definitions for the Task Management App
-
 export type TaskPriority = "Low" | "Medium" | "High";
 export type TaskStatus = "pending" | "in-progress" | "completed";
 
