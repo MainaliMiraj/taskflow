@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
-import { TaskProvider } from "@/context/TaskContext";
 
 import "./globals.css";
 
@@ -34,7 +33,7 @@ export default function RootLayout({
         <div className="min-h-screen bg-gray-100">
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></main>
-            <TaskProvider>{children}</TaskProvider>
+            {children}
           </main>
         </div>
       </body>

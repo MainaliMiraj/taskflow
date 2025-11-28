@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useTasks } from "@/context/TaskContext";
-import { TaskFormData } from "@/types/task";
+import { TaskFormData, Task } from "@/types/task";
 import TaskForm from "@/components/TaskForm";
 
 export default function EditTaskPage() {
@@ -11,35 +10,54 @@ export default function EditTaskPage() {
   const params = useParams();
   const taskId = params.id as string;
 
-  const { tasks, updateTask, getTask } = useTasks();
-  const [currentTask, setCurrentTask] = useState<TaskFormData | null>(null);
+  // const { tasks, updateTask, getTask } = useTasks();
+  const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  console.log("params:", params);
+
+
   useEffect(() => {
-    if (taskId) {
-      const task = getTask(taskId);
-      if (task) {
-        setCurrentTask({
-          title: task.title,
-          description: task.description || "",
-          priority: task.priority,
-          status: task.status,
-          dueDate: task.dueDate,
-        });
+    const fetchTask = async () => {
+      if (!taskId) return;
+
+      try {
+        const res = await fetch(`/api/tasks/${taskId}`);
+        if (!res.ok) throw new Error("Task not found");
+
+        const data = await res.json();
+        setCurrentTask(data.task);
+      } catch (err) {
+        console.error(err);
+        setCurrentTask(null);
+      } finally {
+        setIsLoading(false);
       }
-      setIsLoading(false);
-    }
-  }, [taskId, getTask]);
+    };
+
+    fetchTask();
+  }, [taskId]);
 
   const handleSubmit = async (formData: TaskFormData) => {
+    if (!taskId) return;
+
     setIsSubmitting(true);
 
     try {
-      updateTask(taskId, formData);
+      const res = await fetch(`/api/tasks/${taskId}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error("Failed to update task");
+
+      const data = await res.json();
+      setCurrentTask(data.task); // update local state with latest task
       router.push("/dashboard");
     } catch (error) {
-      console.error("Error updating task:", error);
+      console.error(error);
       alert("Failed to update task. Please try again.");
     } finally {
       setIsSubmitting(false);
@@ -120,7 +138,7 @@ export default function EditTaskPage() {
         )}
 
         <TaskForm
-          task={tasks.find((t) => t.id === taskId)}
+          task={currentTask!}
           onSubmit={handleSubmit}
           onCancel={handleCancel}
           submitButtonText="Save Changes"

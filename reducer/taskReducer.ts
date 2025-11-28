@@ -46,10 +46,10 @@ export const taskReducer = (
 
           const newStatus: TaskStatus =
             task.status === "pending"
-              ? "In Progress"
+              ? "in-progress"
               : task.status === "in-progress"
-              ? "Done"
-              : "Todo";
+              ? "completed"
+              : "pending";
 
           return {
             ...task,

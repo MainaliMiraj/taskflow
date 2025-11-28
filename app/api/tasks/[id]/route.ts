@@ -4,6 +4,34 @@ import Task from "@/models/Task";
 import jwt from "jsonwebtoken";
 import { DecodedToken } from "@/types/auth";
 
+export async function GET(
+  req: NextRequest,
+  context: { params: Promise<{ id: string }> }
+) {
+  await connectDB();
+
+  const { id } = await context.params;
+
+  const token = req.cookies.get("token")?.value;
+  if (!token) {
+    return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+  }
+
+  let decoded: DecodedToken;
+  try {
+    decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
+  } catch {
+    return NextResponse.json({ message: "Invalid token" }, { status: 401 });
+  }
+
+  const task = await Task.findOne({ _id: id, userId: decoded.userId });
+  if (!task) {
+    return NextResponse.json({ message: "Task not found" }, { status: 404 });
+  }
+
+  return NextResponse.json({ task });
+}
+
 export async function PUT(
   req: NextRequest,
   context: { params: Promise<{ id: string }> }
