@@ -16,23 +16,20 @@ export async function POST(req: NextRequest) {
     const user = await User.findOne({ email });
 
     if (!user) {
-      // For security: pretend it's ok even if no user exists
       return NextResponse.json({ message: "Check your email for reset link" });
     }
 
-    // Create token
     const token = crypto.randomBytes(32).toString("hex");
 
-    // Save to user in DB
+
     user.resetPasswordToken = token;
     user.resetPasswordExpires = new Date(Date.now() + 1000 * 60 * 10);
     await user.save();
 
-    // Create reset link (frontend)
     const resetLink = `${process.env.NEXT_PUBLIC_BASE_URL}/reset-password/${token}`;
 
     const transporter = nodemailer.createTransport({
-      service: "Gmail", // or your email provider
+      service: "Gmail", 
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,

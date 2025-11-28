@@ -1,263 +1,183 @@
-# Task Management App
+# Taskflow – Modern Task Management Platform
 
-A clean, modern, multi-page Task Management App built with Next.js 14+ (App Router) and Tailwind CSS. This application is designed for testing practice including Manual Testing, API Testing, Database Testing, and Playwright Automation.
+A production-ready, test-friendly task management experience built with Next.js App Router, Tailwind CSS, and a secure MongoDB backend. Taskflow is designed for teams who care about both product quality and developer experience: every screen is optimized for usability, and every component exposes the hooks QA engineers need to automate confidence-building tests.
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
+  <img src="https://img.shields.io/badge/React-222222?style=for-the-badge&logo=react&logoColor=61dafb" alt="React" />
+  <img src="https://img.shields.io/badge/TypeScript-3178c6?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript" />
+  <img src="https://img.shields.io/badge/Tailwind_CSS-38bdf8?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/MongoDB-0f5132?style=for-the-badge&logo=mongodb&logoColor=4ea94b" alt="MongoDB" />
+  <img src="https://img.shields.io/badge/Mongoose-880000?style=for-the-badge&logo=mongoose&logoColor=white" alt="Mongoose" />
+  <img src="https://img.shields.io/badge/NextAuth.js-20232a?style=for-the-badge&logo=nextauth&logoColor=ffffff" alt="NextAuth.js" />
+  <img src="https://img.shields.io/badge/JSON_Web_Tokens-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT" />
+  <img src="https://img.shields.io/badge/Bcrypt-3465a4?style=for-the-badge&logo=express&logoColor=white" alt="Bcrypt" />
+  <img src="https://img.shields.io/badge/Nodemailer-00B200?style=for-the-badge&logo=gmail&logoColor=white" alt="Nodemailer" />
+  <img src="https://img.shields.io/badge/Playwright-2d3a4a?style=for-the-badge&logo=playwright&logoColor=green" alt="Playwright" />
+</p>
+
+---
+
+## Table of Contents
+
+1. [Key Highlights](#key-highlights)
+2. [Features](#features)
+3. [Tech Stack](#tech-stack)
+4. [Project Structure](#project-structure)
+5. [Getting Started](#getting-started)
+6. [Testing](#testing)
+7. [Available Scripts](#available-scripts)
+8. [Deployment](#deployment)
+9. [Contributing](#contributing)
+10. [License](#license)
+
+---
+
+## Key Highlights
+
+- **Holistic task lifecycle** – Create, edit, filter, sort, and track statuses across the full workflow.
+- **Authentication ready** – Registration, login, forgot password, and secure reset built with NextAuth.js and JWT.
+- **Automation-first design** – Every interactive element exposes deterministic `data-testid` hooks.
+- **Full-stack TypeScript** – Shared models, strict typing, and lint-ready configs keep contributions safe and predictable.
+- **QA playground** – Mock data, Playwright suites, and manual testing guidance make this ideal for training or hiring exercises.
+
+---
 
 ## Features
 
-- **Dashboard Page** (`/`)
-  - Display all tasks in card layout
-  - Filter by status and priority
-  - Search by title and description
-  - Sort by due date, priority, or created date
-  - Edit, delete, and change task status
-  - Add new task button
+### Core Experience
+- Dashboard surface with card layout, priority/status filters, search, and sort controls.
+- Dedicated add/edit pages with optimistic validation, responsive design, and cancel/save flows.
+- Status cycling (Todo → In Progress → Done) with contextual styling.
+- Rich task metadata: descriptions, due dates, priorities, timestamps, and audit-friendly history.
 
-- **Add Task Page** (`/add`)
-  - Form to create new tasks
-  - Validation for required fields
-  - Responsive design
+### Authentication & Security
+- Email/password registration with bcrypt hashing.
+- JWT-backed session management powered by NextAuth.js.
+- Forgot password and secure tokenized reset pages.
+- Nodemailer integration for transactional email flows.
 
-- **Edit Task Page** (`/edit/[id]`)
-  - Pre-filled form with existing task data
-  - Same validation as add form
-  - Cancel and save functionality
+### Testing & Developer Enablement
+- Playwright test runner configuration with sample spec.
+- Extensive `data-testid` coverage across navigation, forms, filters, and cards.
+- Mock database seed data for repeatable manual and automated QA scenarios.
+
+---
 
 ## Tech Stack
 
-- **Framework**: Next.js 14+ (App Router)
-- **Styling**: Tailwind CSS
-- **Language**: TypeScript
-- **Testing**: Playwright (configured and ready)
+| Layer | Technologies |
+| --- | --- |
+| **Frontend** | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg" alt="Next.js" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg" alt="React" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg" alt="TypeScript" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-plain.svg" alt="Tailwind" width="32" /> |
+| **Backend & Auth** | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg" alt="MongoDB" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongoose/mongoose-original.svg" alt="Mongoose" width="32" /> <img src="https://cdn.simpleicons.org/nextauth/18181b?viewbox=auto" alt="NextAuth" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodemailer/nodemailer-plain.svg" alt="Nodemailer" width="32" /> |
+| **Security & Utilities** | <img src="https://cdn.simpleicons.org/jsonwebtokens/000000" alt="JWT" width="32" /> <img src="https://cdn.simpleicons.org/bcrypt/3465a4" alt="Bcrypt" width="32" /> <img src="https://cdn.simpleicons.org/heroicons/0ea5e9" alt="Heroicons" width="32" /> |
+| **Tooling & QA** | <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/playwright/playwright-original.svg" alt="Playwright" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/eslint/eslint-original.svg" alt="ESLint" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postcss/postcss-original.svg" alt="PostCSS" width="32" /> <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg" alt="VS Code" width="32" /> |
+
+> **Note:** Icons use the open-source [Devicon](https://devicon.dev/) and [Simple Icons](https://simpleicons.org/) libraries for consistent branding.
+
+---
 
 ## Project Structure
 
 ```
 taskflow/
-├── app/                             # Next.js App Router entrypoint
-│   ├── globals.css                  # Global styles
-│   ├── layout.tsx                   # Root layout with nav + providers
-│   ├── page.tsx                     # Marketing/landing page
-│   ├── dashboard/page.tsx           # Dashboard with task list + filters
-│   ├── add/page.tsx                 # Add task form
-│   ├── edit/[id]/page.tsx           # Edit task form
-│   ├── login/page.tsx               # Login form
-│   ├── register/page.tsx            # Registration form
-│   ├── forgot-password/page.tsx     # Forgot password flow
-│   └── reset-password/[token]/page.tsx # Reset password flow
-├── components/                      # Shared UI components
-│   ├── DashboardHeader.tsx
-│   ├── FilterBar.tsx
-│   ├── SearchBar.tsx
-│   ├── SortControls.tsx
-│   ├── TaskCard.tsx
-│   └── TaskForm.tsx
-├── context/                         # React context providers
-│   └── TaskContext.tsx
-├── reducer/                         # Reducers for shared state
-│   └── taskReducer.ts
-├── types/                           # Reusable TypeScript definitions
-│   └── task.ts
-├── tests/                           # Playwright specs and docs
-│   ├── README.md
-│   └── example.spec.ts
-├── playwright.config.ts             # Playwright configuration
-├── tailwind.config.js               # Tailwind setup
-├── tsconfig.json                    # TypeScript configuration
+├── app/                         # Next.js App Router entrypoint
+│   ├── (auth)/login             # Authentication views
+│   ├── register                 # Registration flow
+│   ├── forgot-password          # Forgot password form
+│   ├── reset-password/[token]   # Secure reset experience
+│   ├── add                      # Create task
+│   ├── edit/[id]                # Update task
+│   └── dashboard                # Main dashboard
+├── components/                  # Shared UI primitives (cards, filters, forms)
+├── hooks/                       # Custom hooks for data and UI state
+├── lib/ & utils/                # DB connections, helpers, and server utilities
+├── models/                      # Mongoose schemas (e.g., User, Task)
+├── reducer/                     # Global reducer logic
+├── tests/                       # Playwright specs and docs
 └── README.md
 ```
+
+---
 
 ## Getting Started
 
 ### Prerequisites
-
-- Node.js 18+ 
-- npm or yarn package manager
+- Node.js 18+
+- npm or yarn
+- MongoDB connection string (`MONGODB_URI`)
+- SMTP credentials for password reset emails
 
 ### Installation
 
-1. Clone the repository:
 ```bash
 git clone <repository-url>
-cd task-management-app
-```
-
-2. Install dependencies:
-```bash
+cd taskflow
 npm install
-```
-
-3. Run the development server:
-```bash
+cp .env.example .env        # add your secrets
 npm run dev
 ```
 
-4. Open [http://localhost:3000](http://localhost:3000) in your browser
+Visit `http://localhost:3000` to explore the dashboard.
 
-### Build for Production
+### Environment Variables
 
-```bash
-npm run build
-npm start
-```
+| Variable | Description |
+| --- | --- |
+| `MONGODB_URI` | MongoDB connection string |
+| `NEXTAUTH_URL` | Public URL for NextAuth callbacks |
+| `NEXTAUTH_SECRET` | Used to encrypt NextAuth JWTs |
+| `EMAIL_SERVER_HOST`, `EMAIL_SERVER_PORT`, `EMAIL_SERVER_USER`, `EMAIL_SERVER_PASSWORD` | Nodemailer SMTP configuration |
+| `EMAIL_FROM` | Sender address for transactional emails |
+
+---
 
 ## Testing
 
-### Playwright Setup
-
-1. Install Playwright browsers:
 ```bash
-npx playwright install
+npx playwright install   # installs supported browsers
+npm test                 # headless run
+npm test -- --ui         # Playwright UI mode
 ```
 
-2. Run tests:
-```bash
-npm test          # Run all tests
-npm test -- --ui  # Run with UI mode
-```
+- Sample specs live under `tests/` as a starting point.
+- All interactive controls expose deterministic `data-testid` attributes (see `README` comments in `tests/` for coverage).
 
-### Test Data
+---
 
-The app comes with pre-loaded mock data for testing:
-- 5 sample tasks with different priorities and statuses
-- Realistic due dates and descriptions
-- Various test scenarios covered
+## Available Scripts
 
-## Test-Friendly Features
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start the Next.js dev server |
+| `npm run build` | Create an optimized production build |
+| `npm start` | Launch the production server |
+| `npm run lint` | Run ESLint checks |
+| `npm test` | Execute Playwright suites |
 
-### Data Attributes
-
-All interactive elements have `data-testid` attributes for reliable test automation:
-
-**Navigation:**
-- `app-header` - Main header
-- `nav-dashboard` - Dashboard link
-- `nav-add-task` - Add task link
-
-**Task Cards:**
-- `task-card-{id}` - Individual task card
-- `task-title-{id}` - Task title
-- `task-description-{id}` - Task description
-- `task-priority-{id}` - Priority badge
-- `task-status-{id}` - Status badge
-- `task-due-date-{id}` - Due date
-- `task-created-date-{id}` - Created date
-- `edit-task-{id}` - Edit button
-- `delete-task-{id}` - Delete button
-- `change-status-{id}` - Status change button
-
-**Forms:**
-- `task-form` - Main form
-- `task-title-input` - Title input field
-- `task-description-input` - Description textarea
-- `task-priority-select` - Priority dropdown
-- `task-status-select` - Status dropdown
-- `task-due-date-input` - Due date picker
-- `submit-button` - Form submit button
-- `cancel-button` - Form cancel button
-
-**Filters and Search:**
-- `status-filter` - Status filter dropdown
-- `priority-filter` - Priority filter dropdown
-- `clear-filters` - Clear filters button
-- `search-input` - Search input field
-- `clear-search` - Clear search button
-- `sort-by-select` - Sort dropdown
-- `sort-order-button` - Sort order toggle
-
-### Test Scenarios
-
-The app is designed to support various testing scenarios:
-
-1. **CRUD Operations**
-   - Create new tasks
-   - Read/view tasks
-   - Update existing tasks
-   - Delete tasks
-
-2. **Filtering and Sorting**
-   - Filter by status and priority
-   - Search functionality
-   - Sort by different criteria
-
-3. **Form Validation**
-   - Required field validation
-   - Date validation (no past dates)
-   - Error message display
-
-4. **Status Workflow**
-   - Status cycling (Todo → In Progress → Done)
-   - Visual status indicators
-
-5. **Responsive Design**
-   - Mobile-friendly layout
-   - Touch-friendly interactions
-
-## Development Guidelines
-
-### Code Style
-
-- TypeScript for type safety
-- Functional components with hooks
-- Consistent naming conventions
-- Comprehensive comments
-
-### Component Structure
-
-Each component follows this pattern:
-- Props interface definition
-- Main component function
-- Helper functions
-- Event handlers
-- Render method
-
-### State Management
-
-- Local state with `useState`
-- Global state with custom hooks
-- Mock data store for development
-- Easy to replace with real API
-
-## Customization
-
-### Styling
-
-- Tailwind CSS utility classes
-- Custom color palette in `tailwind.config.js`
-- Responsive design classes
-- Hover and focus states
-
-### Adding New Features
-
-1. Update type definitions in `types/task.ts`
-2. Modify the `useTaskStore` hook
-3. Update components as needed
-4. Add appropriate test IDs
-5. Write Playwright tests
+---
 
 ## Deployment
 
-The app is ready for deployment on various platforms:
+Taskflow is optimized for **Vercel**, but also runs seamlessly on:
 
-- **Vercel**: One-click deployment
-- **Netlify**: Static site deployment
-- **Docker**: Containerized deployment
-- **Traditional hosting**: Build and serve
+- **Netlify** – Static hosting with serverless functions.
+- **Docker** – Containerize via `next build` + `next start`.
+- **Traditional Node hosting** – Use the production build and reverse proxy via Nginx/Apache.
+
+Ensure required environment variables are configured in your hosting provider (e.g., Vercel Project Settings or Docker secrets).
+
+---
 
 ## Contributing
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests if applicable
-5. Submit a pull request
+1. Fork the repo and create a feature branch: `git checkout -b feat/amazing`.
+2. Follow the existing project structure and lint rules (`npm run lint`).
+3. Write or update Playwright specs where applicable.
+4. Submit a pull request describing your changes and test coverage.
+
+---
 
 ## License
 
-This project is open source and available under the [MIT License](LICENSE).
-
-## Support
-
-For questions or issues:
-- Check the documentation
-- Open an issue on GitHub
-- Review the test files for examples
+Distributed under the [MIT License](LICENSE). Feel free to use the project as a learning sandbox or foundation for production-grade task management experiences.
