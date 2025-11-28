@@ -3,6 +3,7 @@ import type { NextRequest } from "next/server";
 
 export function middleware(req: NextRequest) {
   const token = req.cookies.get("token")?.value;
+  const { pathname } = req.nextUrl;
 
   const publicRoutes = [
     "/login",
@@ -11,14 +12,13 @@ export function middleware(req: NextRequest) {
     "/reset-password",
   ];
 
-  const { pathname } = req.nextUrl;
-
-  if (publicRoutes.some((route) => pathname.startsWith(route))) {
-    return NextResponse.next();
+  if (token && publicRoutes.some((route) => pathname.startsWith(route))) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
-  // CHECK ONLY FOR TOKEN — NO JWT VERIFY
-  if (!token) {
+  // If route is protected and no token → redirect to login
+  const protectedRoutes = ["/dashboard", "/add", "/edit"];
+  if (!token && protectedRoutes.some((route) => pathname.startsWith(route))) {
     return NextResponse.redirect(new URL("/login", req.url));
   }
 
@@ -26,5 +26,11 @@ export function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/add/:path*", "/edit/:path*"],
+  matcher: [
+    "/dashboard/:path*",
+    "/add/:path*",
+    "/edit/:path*",
+    "/login",
+    "/register",
+  ],
 };

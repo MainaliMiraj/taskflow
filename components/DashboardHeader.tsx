@@ -28,7 +28,7 @@ export default function DashboardHeader() {
   }, []);
 
   return (
-    <header className="w-full bg-white border-b shadow-sm sticky top-0 z-30 mb-5">
+    <header className="w-full bg-white border-b shadow-sm sticky top-0 z-30 ">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <FaTasks className="text-primary-600 text-xl" />

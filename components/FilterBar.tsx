@@ -1,6 +1,6 @@
-'use client';
+"use client";
 
-import { TaskPriority, TaskStatus } from '@/types/task';
+import { TaskPriority, TaskStatus } from "@/types/task";
 
 interface FilterBarProps {
   statusFilter?: TaskStatus;
@@ -18,12 +18,12 @@ export default function FilterBar({
   onClearFilters,
 }: FilterBarProps) {
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value as TaskStatus | '';
+    const value = e.target.value as TaskStatus | "";
     onStatusChange(value || undefined);
   };
 
   const handlePriorityChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value as TaskPriority | '';
+    const value = e.target.value as TaskPriority | "";
     onPriorityChange(value || undefined);
   };
 
@@ -33,12 +33,15 @@ export default function FilterBar({
     <div className="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
       <div className="flex flex-col sm:flex-row gap-4 items-end">
         <div className="flex-1">
-          <label htmlFor="status-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="status-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Filter by Status
           </label>
           <select
             id="status-filter"
-            value={statusFilter || ''}
+            value={statusFilter || ""}
             onChange={handleStatusChange}
             className="select-field w-full"
             data-testid="status-filter"
@@ -51,12 +54,15 @@ export default function FilterBar({
         </div>
 
         <div className="flex-1">
-          <label htmlFor="priority-filter" className="block text-sm font-medium text-gray-700 mb-1">
+          <label
+            htmlFor="priority-filter"
+            className="block text-sm font-medium text-gray-700 mb-1"
+          >
             Filter by Priority
           </label>
           <select
             id="priority-filter"
-            value={priorityFilter || ''}
+            value={priorityFilter || ""}
             onChange={handlePriorityChange}
             className="select-field w-full"
             data-testid="priority-filter"

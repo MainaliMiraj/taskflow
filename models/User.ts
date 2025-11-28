@@ -3,7 +3,9 @@ import mongoose, { Schema, Model, Document } from "mongoose";
 export interface IUser extends Document {
   name: string;
   email: string;
-  password: string; // will be hashed
+  password: string;
+  resetPasswordToken?: string | null;
+  resetPasswordExpires?: Date | null;
   createdAt: Date;
   updatedAt: Date;
 }
@@ -29,6 +31,14 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: true,
       minlength: 6,
+    },
+    resetPasswordToken: {
+      type: String,
+      default: null,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      default: null,
     },
   },
   {
