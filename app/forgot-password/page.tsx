@@ -6,13 +6,16 @@ import Link from "next/link";
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [sent, setSent] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
+    setLoading(true);
     const res = await fetch("/api/auth/forgot-password", {
       method: "POST",
       body: JSON.stringify({ email }),
     });
+    setLoading(false);
     if (res.ok) {
       setSent(true);
     } else {
@@ -45,7 +48,14 @@ export default function ForgotPassword() {
             </div>
 
             <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-              Send Reset Link
+              {loading ? (
+                <div className="flex items-center justify-center gap-2">
+                  <span className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+                  Sending...
+                </div>
+              ) : (
+                "Send Reset Link"
+              )}
             </button>
             <Link
               href="/login"
