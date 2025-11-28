@@ -33,7 +33,7 @@ test.describe('Task Management App - Basic Tests', () => {
     await page.waitForSelector('[data-testid^="task-card-"]');
     
     // Select "Todo" from status filter
-    await page.selectOption('[data-testid="status-filter"]', 'Todo');
+    await page.selectOption('[data-testid="status-filter"]', 'pending');
     
     // Verify filtered results
     const visibleTasks = await page.locator('[data-testid^="task-card-"]').count();
@@ -60,7 +60,7 @@ test.describe('Task Management App - Basic Tests', () => {
     await page.fill('[data-testid="task-title-input"]', 'Test Task');
     await page.fill('[data-testid="task-description-input"]', 'This is a test task');
     await page.selectOption('[data-testid="task-priority-select"]', 'High');
-    await page.selectOption('[data-testid="task-status-select"]', 'Todo');
+    await page.selectOption('[data-testid="task-status-select"]', 'pending');
     
     // Set due date to tomorrow
     const tomorrow = new Date();

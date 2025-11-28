@@ -43,10 +43,10 @@ export default function FilterBar({
             className="select-field w-full"
             data-testid="status-filter"
           >
-            <option value="">All Statuses</option>
-            <option value="Todo">Todo</option>
-            <option value="In Progress">In Progress</option>
-            <option value="Done">Done</option>
+            <option value="">All Status</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
           </select>
         </div>
 

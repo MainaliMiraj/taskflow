@@ -45,9 +45,9 @@ export const taskReducer = (
           if (task.id !== action.payload) return task;
 
           const newStatus: TaskStatus =
-            task.status === "Todo"
+            task.status === "pending"
               ? "In Progress"
-              : task.status === "In Progress"
+              : task.status === "in-progress"
               ? "Done"
               : "Todo";
 
