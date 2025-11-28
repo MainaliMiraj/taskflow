@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/router";
 import Link from "next/link";
 
 export default function ForgotPassword() {
@@ -14,7 +13,6 @@ export default function ForgotPassword() {
       method: "POST",
       body: JSON.stringify({ email }),
     });
-    const router = useRouter();
     if (res.ok) {
       setSent(true);
     } else {
@@ -26,11 +24,11 @@ export default function ForgotPassword() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
-          Reset Password 🔒
+          Reset Password
         </h2>
 
         {sent ? (
-          <p className="text-center text-green-600">
+          <p className="text-center text-indigo-600">
             If this email exists, a reset link has been sent.
           </p>
         ) : (

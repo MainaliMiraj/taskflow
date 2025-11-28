@@ -1,9 +1,12 @@
 "use client";
 
 import { useState } from "react";
+import { useParams } from "next/navigation";
 
-export default function ResetPasswordPage({ params }: any) {
-  const { token } = params;
+export default function ResetPasswordPage() {
+  const params = useParams();
+  const token = params.token as string;
+
   const [password, setPassword] = useState("");
   const [changed, setChanged] = useState(false);
 
@@ -26,7 +29,7 @@ export default function ResetPasswordPage({ params }: any) {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
-          Create New Password 🔑
+          Create New Password
         </h2>
 
         {changed ? (

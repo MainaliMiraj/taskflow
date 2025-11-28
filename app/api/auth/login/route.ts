@@ -24,13 +24,6 @@ export async function POST(req: NextRequest) {
     }
 
     const user = await User.findOne({ email: email.toLowerCase().trim() });
-    // if (!description) {
-    //   return NextResponse.json(
-    //     { message: "Description is required" },
-    //     { status: 400 }
-    //   );
-    
-    // }
 
     if (!user) {
       return NextResponse.json(
