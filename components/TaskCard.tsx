@@ -1,138 +1,111 @@
-'use client';
+"use client";
 
-import { Task, TaskPriority, TaskStatus } from '@/types/task';
-import { useRouter } from 'next/navigation';
+import { useState } from "react";
+import { Task, TaskPriority } from "@/types/task";
+import type { DragEvent } from "react";
 
 interface TaskCardProps {
   task: Task;
-  onDelete: (id: string) => void;
-  onStatusChange: (id: string) => void;
+  draggable?: boolean;
+  onDragStart?: (id: string) => void;
+  onDragEnd?: () => void;
+  onSelect?: (task: Task) => void;
 }
 
-export default function TaskCard({ task, onDelete, onStatusChange }: TaskCardProps) {
-  const router = useRouter();
+export default function TaskCard({
+  task,
+  draggable = false,
+  onDragStart,
+  onDragEnd,
+  onSelect,
+}: TaskCardProps) {
+  const [isDragging, setIsDragging] = useState(false);
 
   const getPriorityColor = (priority: TaskPriority) => {
     switch (priority) {
-      case 'High':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'Medium':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Low':
-        return 'bg-green-100 text-green-800 border-green-200';
+      case "High":
+        return "bg-red-100 text-red-800 border-red-200";
+      case "Medium":
+        return "bg-yellow-100 text-yellow-800 border-yellow-200";
+      case "Low":
+        return "bg-green-100 text-green-800 border-green-200";
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
-    }
-  };
-
-  const getStatusColor = (status: TaskStatus) => {
-    switch (status) {
-      case 'pending':
-        return 'bg-gray-100 text-gray-800';
-      case 'in-progress':
-        return 'bg-blue-100 text-blue-800';
-      case 'completed':
-        return 'bg-green-100 text-green-800';
-      default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800 border-gray-200";
     }
   };
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'short', 
-      day: 'numeric' 
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
-  const handleEdit = () => {
-    router.push(`/edit/${task.id}`);
+  const handleDragStart = (e: DragEvent<HTMLDivElement>) => {
+    e.dataTransfer.setData("text/plain", task.id);
+    e.dataTransfer.effectAllowed = "move";
+    setIsDragging(true);
+    onDragStart?.(task.id);
   };
 
-  const handleDelete = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      onDelete(task.id);
-    }
+  const handleDragEnd = () => {
+    setIsDragging(false);
+    onDragEnd?.();
   };
 
-  const handleStatusChange = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    onStatusChange(task.id);
+  const handleSelect = () => {
+    if (isDragging) return;
+    onSelect?.(task);
   };
 
   return (
-    <div 
-      className="task-card hover:scale-[1.02] cursor-pointer"
+    <div
+      className="group relative cursor-pointer overflow-hidden  border border-slate-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-lg"
       data-testid={`task-card-${task.id}`}
+      draggable={draggable}
+      onDragStart={handleDragStart}
+      onDragEnd={handleDragEnd}
+      onClick={handleSelect}
     >
-      <div className="flex justify-between items-start mb-4">
-        <h3 
-          className="text-lg font-semibold text-gray-900 pr-4"
+      <div
+        className="absolute right-4 top-4 h-16 w-16  bg-primary-200/80 blur-3xl transition-opacity group-hover:opacity-80"
+        aria-hidden
+      />
+      <div className="flex items-center justify-between text-gray-500 text-xs">
+        <h3
           data-testid={`task-title-${task.id}`}
+          className="text-black text-2xl"
         >
           {task.title}
         </h3>
-        <div className="flex space-x-2 flex-shrink-0">
-          <button
-            onClick={handleEdit}
-            className="text-primary-600 hover:text-primary-800 text-sm font-medium transition-colors"
-            data-testid={`edit-task-${task.id}`}
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDelete}
-            className="text-red-600 hover:text-red-800 text-sm font-medium transition-colors"
-            data-testid={`delete-task-${task.id}`}
-          >
-            Delete
-          </button>
-        </div>
+        <div className="flex items-center gap-2 capitalize"></div>
+        Due: {formatDate(task.dueDate)}
       </div>
-
-      {task.description && (
-        <p 
-          className="text-gray-600 mb-4 text-sm leading-relaxed"
-          data-testid={`task-description-${task.id}`}
-        >
-          {task.description}
-        </p>
-      )}
-
-      <div className="flex flex-wrap gap-2 mb-4">
-        <span 
-          className={`px-2 py-1 rounded-full text-xs font-medium border ${getPriorityColor(task.priority)}`}
+      <div className="mt-3">
+        {task.description && (
+          <p
+            className="mt-1 text-sm text-gray-600 line-clamp-2"
+            data-testid={`task-description-${task.id}`}
+          >
+            {task.description}
+          </p>
+        )}
+      </div>
+      <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
+        <span
+          className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ${getPriorityColor(
+            task.priority
+          )}`}
           data-testid={`task-priority-${task.id}`}
         >
-          {task.priority} Priority
-        </span>
-        <span 
-          className={`px-2 py-1 rounded-full text-xs font-medium ${getStatusColor(task.status)}`}
-          data-testid={`task-status-${task.id}`}
-        >
-          {task.status}
-        </span>
-      </div>
-
-      <div className="flex justify-between items-center text-sm text-gray-500 mb-4">
-        <span data-testid={`task-due-date-${task.id}`}>
-          Due: {formatDate(task.dueDate)}
+          {task.priority} priority
         </span>
         <span data-testid={`task-created-date-${task.id}`}>
           Created: {formatDate(task.createdAt)}
         </span>
       </div>
-
-      <button
-        onClick={handleStatusChange}
-        className="w-full bg-primary-50 hover:bg-primary-100 text-primary-700 font-medium py-2 px-4 rounded-lg transition-colors duration-200 border border-primary-200"
-        data-testid={`change-status-${task.id}`}
-      >
-        Change Status
-      </button>
     </div>
   );
 }

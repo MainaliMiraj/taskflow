@@ -1,16 +1,55 @@
 "use client";
 
+import { useEffect, useState, type DragEvent } from "react";
 import { useRouter } from "next/navigation";
 import TaskCard from "@/components/TaskCard";
 import FilterBar from "@/components/FilterBar";
 import SearchBar from "@/components/SearchBar";
+import TaskDetailsModal from "@/components/TaskDetailsModal";
 import { useTasks } from "@/hooks/useTasks";
 import { useTaskFilters } from "@/hooks/useTaskFilters";
 import { useDebouncedValue } from "@/hooks/useDebounceValue";
-import { TaskStatus } from "@/types/task";
+import { Task, TaskStatus } from "@/types/task";
+
+const columns: { status: TaskStatus; title: string; description: string }[] = [
+  {
+    status: "pending",
+    title: "To Do",
+    description: "New and upcoming tasks",
+  },
+  {
+    status: "in-progress",
+    title: "In Progress",
+    description: "Tasks currently being worked on",
+  },
+  {
+    status: "completed",
+    title: "Completed",
+    description: "Recently finished tasks",
+  },
+];
+
+const formatStatusLabel = (status: TaskStatus) => {
+  switch (status) {
+    case "pending":
+      return "To Do";
+    case "in-progress":
+      return "In Progress";
+    case "completed":
+      return "Completed";
+    default:
+      return status;
+  }
+};
 
 export default function Dashboard() {
   const router = useRouter();
+  const [draggedTaskId, setDraggedTaskId] = useState<string | null>(null);
+  const [draggedOverStatus, setDraggedOverStatus] = useState<TaskStatus | null>(
+    null
+  );
+  const [selectedTask, setSelectedTask] = useState<Task | null>(null);
+  const selectedTaskId = selectedTask?.id;
 
   const {
     tasks,
@@ -24,7 +63,6 @@ export default function Dashboard() {
     filters,
     sortOptions,
     searchTerm,
-    setSortOptions,
     setSearchTerm,
     handleStatusChange,
     handlePriorityChange,
@@ -40,9 +78,85 @@ export default function Dashboard() {
   );
 
   const hasActiveFilters = filters.status || filters.priority || searchTerm;
-  const statusCycle: TaskStatus[] = ["pending", "in-progress", "completed"];
 
   const handleAddTask = () => router.push("/add");
+
+  useEffect(() => {
+    if (!selectedTaskId) return;
+    const freshTask = tasks.find((task) => task.id === selectedTaskId);
+    if (freshTask && freshTask !== selectedTask) {
+      setSelectedTask(freshTask);
+    }
+  }, [tasks, selectedTask, selectedTaskId]);
+
+  const handleCardDragStart = (taskId: string) => {
+    setDraggedTaskId(taskId);
+  };
+
+  const handleCardDragEnd = () => {
+    setDraggedTaskId(null);
+    setDraggedOverStatus(null);
+  };
+
+  const handleDragOver = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (
+    event: DragEvent<HTMLDivElement>,
+    targetStatus: TaskStatus
+  ) => {
+    event.preventDefault();
+    const transferId = event.dataTransfer.getData("text/plain");
+    const taskId = draggedTaskId ?? transferId;
+    if (!taskId) return;
+
+    const task = tasks.find((t) => t.id === taskId);
+    if (task && task.status !== targetStatus) {
+      const fromLabel = formatStatusLabel(task.status);
+      const toLabel = formatStatusLabel(targetStatus);
+      const confirmed = window.confirm(
+        `Move "${task.title}" from ${fromLabel} to ${toLabel}?`
+      );
+      if (confirmed) {
+        updateTaskStatus(task.id, targetStatus);
+      }
+    }
+
+    setDraggedTaskId(null);
+    setDraggedOverStatus(null);
+  };
+
+  const handleDragEnter = (status: TaskStatus) => {
+    if (!draggedTaskId) return;
+    setDraggedOverStatus(status);
+  };
+
+  const handleDragLeave = (status: TaskStatus) => {
+    if (draggedOverStatus === status) {
+      setDraggedOverStatus(null);
+    }
+  };
+
+  const handleTaskSelect = (task: Task) => {
+    setSelectedTask(task);
+  };
+
+  const handleCloseModal = () => setSelectedTask(null);
+
+  const handleEditTask = (taskId: string) => {
+    router.push(`/edit/${taskId}`);
+  };
+
+  const handleDeleteTask = async (taskId: string) => {
+    await deleteTask(taskId);
+    setSelectedTask(null);
+  };
+
+  const handleStatusUpdate = async (taskId: string, newStatus: TaskStatus) => {
+    await updateTaskStatus(taskId, newStatus);
+  };
 
   if (loading)
     return (
@@ -143,23 +257,70 @@ export default function Dashboard() {
           )}
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredTasks.map((task) => {
-            const nextStatus =
-              statusCycle[
-                (statusCycle.indexOf(task.status) + 1) % statusCycle.length
-              ];
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {columns.map((column) => {
+            const columnTasks = filteredTasks.filter(
+              (task) => task.status === column.status
+            );
+            const isDragActive = draggedOverStatus === column.status;
 
             return (
-              <TaskCard
-                key={task.id}
-                task={task}
-                onDelete={() => deleteTask(task.id)}
-                onStatusChange={() => updateTaskStatus(task.id, nextStatus)}
-              />
+              <div
+                key={column.status}
+                className={`flex flex-col rounded-xl border bg-slate-50 p-4 transition-colors ${
+                  isDragActive
+                    ? "border-primary-400 bg-primary-50"
+                    : "border-slate-200"
+                }`}
+                onDrop={(event) => handleDrop(event, column.status)}
+                onDragOver={handleDragOver}
+                onDragEnter={() => handleDragEnter(column.status)}
+                onDragLeave={() => handleDragLeave(column.status)}
+              >
+                <div className="mb-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      {column.title}
+                    </h2>
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-medium text-gray-600">
+                      {columnTasks.length}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-500">{column.description}</p>
+                </div>
+
+                <div className="flex flex-1 flex-col gap-4">
+                  {columnTasks.length === 0 ? (
+                    <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
+                      Drag a task here
+                    </div>
+                  ) : (
+                    columnTasks.map((task) => (
+                      <TaskCard
+                        key={task.id}
+                        task={task}
+                        draggable
+                        onDragStart={handleCardDragStart}
+                        onDragEnd={handleCardDragEnd}
+                        onSelect={handleTaskSelect}
+                      />
+                    ))
+                  )}
+                </div>
+              </div>
             );
           })}
         </div>
+      )}
+
+      {selectedTask && (
+        <TaskDetailsModal
+          task={selectedTask}
+          onClose={handleCloseModal}
+          onDelete={handleDeleteTask}
+          onStatusChange={handleStatusUpdate}
+          onEdit={handleEditTask}
+        />
       )}
     </div>
   );
