@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import TaskCard from "@/components/TaskCard";
 import FilterBar from "@/components/FilterBar";
 import SearchBar from "@/components/SearchBar";
-import SortControls from "@/components/SortControls";
 import { useTasks } from "@/hooks/useTasks";
 import { useTaskFilters } from "@/hooks/useTaskFilters";
 import { useDebouncedValue } from "@/hooks/useDebounceValue";
@@ -86,12 +85,6 @@ export default function Dashboard() {
               searchTerm={searchTerm}
               onSearchChange={setSearchTerm}
               placeholder="Search by title or description..."
-            />
-          </div>
-          <div className="sm:w-64">
-            <SortControls
-              sortOptions={sortOptions}
-              onSortChange={setSortOptions}
             />
           </div>
         </div>
