@@ -50,7 +50,9 @@ export default function VerifyOtpContent() {
     setLoading(false);
 
     if (res.ok) {
-      alert("Account verified successfully!");
+      alert(
+        "Email and password verification complete. Please proceed to login."
+      );
       router.push("/login");
     } else {
       const data = await res.json();

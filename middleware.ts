@@ -41,5 +41,6 @@ export const config = {
     "/verify-otp/:path*",
     "/login",
     "/register",
+    "/dashboard/change-password/:path*",
   ],
 };

@@ -119,7 +119,7 @@ export default function RegisterPage() {
               />
 
               <div
-                className="absolute right-3 top-3 cursor-pointer text-gray-500"
+                className="absolute right-3 top-5 cursor-pointer text-gray-500"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <FaEyeSlash /> : <FaEye />}

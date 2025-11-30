@@ -1,4 +1,3 @@
-
 # **Taskflow – Modern Task Management Platform**
 
 A production-grade task board built on the **Next.js App Router**, **Tailwind CSS**, and a secure **MongoDB backend**.
@@ -36,13 +35,13 @@ Taskflow keeps busy teams organized with clean CRUD flows, drag-and-drop columns
 
 ## **Key Highlights**
 
-* **JWT-secured accounts** – Login, registration, logout, and password recovery using encrypted HTTP-only cookies and middleware-protected routes.
-* **Kanban-style task board** – To Do / In Progress / Completed columns with drag-and-drop, smart empty states, and real-time count updates.
-* **Task detail modal** – Click any task to reveal metadata, timestamps, description expansion, status shortcuts, edit/delete options, and more.
-* **Streamlined forms** – One reusable form for add/edit flows with client-side validation and prevention of invalid due dates.
-* **Email-based reset flow** – Nodemailer + crypto tokens implement a secure reset flow with time-bound tokens and verification.
-* **Search & filters** – Debounced search with instant feedback and clean UI messaging.
-* **Modern UX** – Skeleton loaders, modals, transitions, and consistent component patterns.
+- **JWT-secured accounts** – Login, registration, logout, and password recovery using encrypted HTTP-only cookies and middleware-protected routes.
+- **Kanban-style task board** – To Do / In Progress / Completed columns with drag-and-drop, smart empty states, and real-time count updates.
+- **Task detail modal** – Click any task to reveal metadata, timestamps, description expansion, status shortcuts, edit/delete options, and more.
+- **Streamlined forms** – One reusable form for add/edit flows with client-side validation and prevention of invalid due dates.
+- **Email-based reset flow** – Nodemailer + crypto tokens implement a secure reset flow with time-bound tokens and verification.
+- **Search & filters** – Debounced search with instant feedback and clean UI messaging.
+- **Modern UX** – Skeleton loaders, modals, transitions, and consistent component patterns.
 
 ---
 
@@ -50,65 +49,67 @@ Taskflow keeps busy teams organized with clean CRUD flows, drag-and-drop columns
 
 ### **Authentication & Access Control**
 
-* APIs under `/api/auth` handle registration, login, logout, and password resets.
-* Passwords hashed with **bcrypt** and stored securely.
-* Login issues a **JWT** signed via `JWT_SECRET`, stored as an HTTP-only cookie.
-* `middleware.ts` protects authenticated routes such as:
+- APIs under `/api/auth` handle registration, login, logout, and password resets.
+- Passwords hashed with **bcrypt** and stored securely.
+- Login issues a **JWT** signed via `JWT_SECRET`, stored as an HTTP-only cookie.
+- `middleware.ts` protects authenticated routes such as:
 
-  * `/dashboard`
-  * `/add`
-  * `/edit/[id]`
-* Forgot password flow:
+  - `/dashboard`
+  - `/add`
+  - `/edit/[id]`
 
-  * `/api/auth/forgot-password` → issues a time-limited token
-  * `/api/auth/reset-password` → verifies the token and updates the password
+- Forgot password flow:
+
+  - `/api/auth/forgot-password` → issues a time-limited token
+  - `/api/auth/reset-password` → verifies the token and updates the password
 
 ---
 
 ### **Dashboard & Task Board**
 
-* `/dashboard` shows all tasks grouped by status.
-* Drag tasks between columns; updates persist to the API.
-* Empty states appear with contextual messaging.
-* Debounced search filters by title & description.
-* Task cards show:
+- `/dashboard` shows all tasks grouped by status.
+- Drag tasks between columns; updates persist to the API.
+- Empty states appear with contextual messaging.
+- Debounced search filters by title & description.
+- Task cards show:
 
-  * Priority pills
-  * Due date
-  * Created timestamp
-  * Description preview
-  * Test-friendly `data-testid` selectors
+  - Priority pills
+  - Due date
+  - Created timestamp
+  - Description preview
+  - Test-friendly `data-testid` selectors
 
 ---
 
 ### **Task Creation & Editing**
 
-* `TaskForm` drives both create and edit pages.
-* Validates all fields, especially dates.
-* Edit flow loads with a skeleton UI.
-* Graceful “Task Not Found” handling for invalid IDs.
+- `TaskForm` drives both create and edit pages.
+- Validates all fields, especially dates.
+- Edit flow loads with a skeleton UI.
+- Graceful “Task Not Found” handling for invalid IDs.
 
 ---
 
 ### **Experience Enhancements**
 
-* Centralized logic in:
+- Centralized logic in:
 
-  * `useTasks`
-  * `useTaskFilters`
-  * `useDebouncedValue`
-* Strong typing across client & server through shared TypeScript models.
-* Clean Tailwind utility-based UI with shared styles in `globals.css`.
+  - `useTasks`
+  - `useTaskFilters`
+  - `useDebouncedValue`
+
+- Strong typing across client & server through shared TypeScript models.
+- Clean Tailwind utility-based UI with shared styles in `globals.css`.
 
 ---
 
 ## **Architecture**
 
-* **Frontend** – Next.js App Router with RSC + client components where needed
-* **API Layer** – Route handlers under `app/api` with REST-like patterns
-* **Database** – MongoDB + Mongoose for schema modeling
-* **Auth Strategy** – Stateless JWT in HTTP-only cookie
-* **Email System** – Nodemailer-based reset links
+- **Frontend** – Next.js App Router with RSC + client components where needed
+- **API Layer** – Route handlers under `app/api` with REST-like patterns
+- **Database** – MongoDB + Mongoose for schema modeling
+- **Auth Strategy** – Stateless JWT in HTTP-only cookie
+- **Email System** – Nodemailer-based reset links
 
 ---
 
@@ -143,10 +144,10 @@ taskflow/
 
 ### **Prerequisites**
 
-* Node.js 18+
-* npm, pnpm, or yarn
-* MongoDB (local or Atlas)
-* SMTP email account (Gmail supported)
+- Node.js 18+
+- npm, pnpm, or yarn
+- MongoDB (local or Atlas)
+- SMTP email account (Gmail supported)
 
 ### **Installation**
 
@@ -172,11 +173,11 @@ Visit:
 
 | Variable               | Required | Description                       |
 | ---------------------- | -------- | --------------------------------- |
-| `MONGODB_URI`          | ✅        | Full MongoDB connection string    |
-| `JWT_SECRET`           | ✅        | Secret used to sign JWT tokens    |
-| `NEXT_PUBLIC_BASE_URL` | ✅        | Base URL for password reset links |
-| `EMAIL_USER`           | ✅        | SMTP username                     |
-| `EMAIL_PASS`           | ✅        | SMTP password / app password      |
+| `MONGODB_URI`          | ✅       | Full MongoDB connection string    |
+| `JWT_SECRET`           | ✅       | Secret used to sign JWT tokens    |
+| `NEXT_PUBLIC_BASE_URL` | ✅       | Base URL for password reset links |
+| `EMAIL_USER`           | ✅       | SMTP username                     |
+| `EMAIL_PASS`           | ✅       | SMTP password / app password      |
 
 > **Gmail users:** Use an App Password for better security.
 
@@ -214,17 +215,23 @@ Visit:
 
 ## **Manual QA Checklist**
 
-* Register → log in → log out
-* Create tasks with all priority levels
-* Test validation errors
-* Drag tasks between columns
-* Confirm board counts update
-* Delete tasks → confirm modal
-* Test search bar
-* Reset password via email
-* Visit invalid `/edit/:id` route → error handling
+- Register → log in → log out
+- Create tasks with all priority levels
+- Test validation errors
+- Drag tasks between columns
+- Confirm board counts update
+- Delete tasks → confirm modal
+- Test search bar
+- Reset password via email
+- Visit invalid `/edit/:id` route → error handling
 
 ---
+
+## **Further Backend Feature to Add**
+
+- Resend OTP Route
+- Rate Limiting
+- Cleanup the unverified user.
 
 ## **Contributing**
 
@@ -234,6 +241,7 @@ Visit:
    ```bash
    git checkout -b feat/my-feature
    ```
+
 3. Follow existing patterns (hooks, form reuse, Tailwind styles)
 4. Run `npm run lint` before submitting
 5. Provide a clear explanation of changes
@@ -244,4 +252,3 @@ Visit:
 
 Distributed under the MIT License.
 Feel free to adapt Taskflow for portfolio, production, or learning use cases.
-
