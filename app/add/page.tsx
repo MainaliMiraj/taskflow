@@ -10,6 +10,10 @@ export default function AddTaskPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (formData: TaskFormData) => {
+    const confirmed = confirm(`Confirm task creation`);
+
+    if (!confirmed) return;
+
     setIsSubmitting(true);
 
     try {
@@ -26,6 +30,7 @@ export default function AddTaskPage() {
       if (!response.ok) {
         throw new Error(data.message || "Failed to create task");
       }
+
       router.push("/dashboard");
     } catch (error: any) {
       console.log("error adding the task", error);
@@ -37,51 +42,53 @@ export default function AddTaskPage() {
       setIsSubmitting(false);
     }
   };
+
   const handleCancel = () => {
+    const confirmed = confirm(
+      `Are you sure you want to cancel? All changes will be lost.`
+    );
+    if (!confirmed) return;
     router.push("/dashboard");
   };
 
   return (
-    <div className="max-w-2xl mx-auto">
-      <div className="mb-8">
-        <h1
-          className="text-3xl font-bold text-primary-700"
-          data-testid="add-task-title"
-        >
-          Add New Task
-        </h1>
-        <p className="text-primary-800 mt-2">
-          Create a new task to manage your workflow
-        </p>
-      </div>
-
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        {isSubmitting && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
-              <p className="text-blue-800">Creating task...</p>
-            </div>
+    <div className="min-h-screen px-4 py-10 backdrop-blur-sm">
+      <div className="mx-auto max-w-3xl">
+        <div className="overflow-hidden  border border-slate-100 shadow-xl backdrop-blur">
+          <div className="bg-gradient-to-br from-white/80 via-primary-50/50 to-white/70 px-8 pb-6 pt-10 sm:px-12 backdrop-blur-sm">
+            <p className="text-sm font-medium text-primary-600">
+              Task Overview
+            </p>
+            <h1
+              className="mt-2 text-3xl font-semibold text-gray-900"
+              data-testid="add-task-title"
+            >
+              Create New Task
+            </h1>
+            <p className="mt-3 text-gray-600">
+              Capture the essentials so your team knows what to prioritize.
+            </p>
           </div>
-        )}
 
-        <TaskForm
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          submitButtonText="Create Task"
-        />
-      </div>
+          <div className="border-t border-slate-100 bg-white/80 px-6 py-8 sm:px-10 backdrop-blur-sm">
+            {isSubmitting && (
+              <div className="mb-6 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3">
+                <div className="flex items-center">
+                  <div className="mr-3 h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600"></div>
+                  <p className="text-sm font-medium text-blue-800">
+                    Creating task...
+                  </p>
+                </div>
+              </div>
+            )}
 
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <h3 className="text-sm font-medium text-primary-700 mb-2">
-          Quick Tips:
-        </h3>
-        <ul className="text-sm text-primary-900 space-y-1">
-          <li>• Title is required and should be descriptive</li>
-          <li>• Description is requited provide context</li>
-          <li>• Set appropriate priority to organize your work</li>
-          <li>• Choose a realistic due date to stay on track</li>
-        </ul>
+            <TaskForm
+              onSubmit={handleSubmit}
+              onCancel={handleCancel}
+              submitButtonText="Create Task"
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

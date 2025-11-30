@@ -56,14 +56,14 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link
               href="/register"
-              className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-xl font-semibold hover:shadow-xl hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
+              className="group bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4  font-semibold hover:shadow-xl hover:shadow-blue-500/50 transition-all duration-300 transform hover:scale-105 flex items-center gap-2"
             >
               Get Started Free
               <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
             </Link>
             <Link
               href="/login"
-              className="bg-white text-gray-900 px-8 py-4 rounded-xl font-semibold border-2 border-gray-200 hover:border-blue-600 hover:text-blue-600 transition-all duration-300"
+              className="bg-white text-gray-900 px-8 py-4 font-semibold border-2 border-gray-200 hover:border-blue-600 hover:text-blue-600 transition-all duration-300"
             >
               Sign In
             </Link>

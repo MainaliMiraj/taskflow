@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 interface SearchBarProps {
   searchTerm: string;
@@ -16,7 +16,7 @@ export default function SearchBar({
   };
 
   const clearSearch = () => {
-    onSearchChange('');
+    onSearchChange("");
   };
 
   return (

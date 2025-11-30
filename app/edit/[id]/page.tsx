@@ -17,7 +17,6 @@ export default function EditTaskPage() {
 
   console.log("params:", params);
 
-
   useEffect(() => {
     const fetchTask = async () => {
       if (!taskId) return;
@@ -40,6 +39,9 @@ export default function EditTaskPage() {
   }, [taskId]);
 
   const handleSubmit = async (formData: TaskFormData) => {
+    const confirmed = confirm(`Confirm task update`);
+    if (!confirmed) return;
+
     if (!taskId) return;
 
     setIsSubmitting(true);
@@ -54,7 +56,7 @@ export default function EditTaskPage() {
       if (!res.ok) throw new Error("Failed to update task");
 
       const data = await res.json();
-      setCurrentTask(data.task); // update local state with latest task
+      setCurrentTask(data.task);
       router.push("/dashboard");
     } catch (error) {
       console.error(error);
@@ -65,6 +67,10 @@ export default function EditTaskPage() {
   };
 
   const handleCancel = () => {
+    const confirmed = confirm(
+      `Are you sure you want to cancel? All changes will be lost.`
+    );
+    if (!confirmed) return;
     router.push("/dashboard");
   };
 
@@ -112,50 +118,40 @@ export default function EditTaskPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto">
-      {/* Page Header */}
-      <div className="mb-8">
-        <h1
-          className="text-3xl font-bold text-gray-900"
-          data-testid="edit-task-title"
-        >
-          Edit Task
-        </h1>
-        <p className="text-gray-600 mt-2">
-          Update the details of your existing task
-        </p>
-      </div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4 py-6">
+      <div className="overflow-hidden rounded border border-slate-100 bg-white shadow-xl">
+        <div className="bg-gradient-to-br from-white via-primary-50/60 to-white px-8 pb-6 pt-10 sm:px-12">
+          <p className="text-sm font-medium text-primary-600">Task Overview</p>
+          <h1
+            className="mt-2 text-3xl font-semibold text-gray-900"
+            data-testid="edit-task-title"
+          >
+            Edit Task
+          </h1>
+          <p className="mt-3 text-gray-600">
+            Keep your task details up to date to stay aligned with your plan.
+          </p>
+        </div>
 
-      {/* Form Container */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        {isSubmitting && (
-          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-            <div className="flex items-center">
-              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-600 mr-3"></div>
-              <p className="text-blue-800">Updating task...</p>
+        <div className="border-t border-slate-100 bg-white px-6 py-8 sm:px-10">
+          {isSubmitting && (
+            <div className="mb-6 rounded-2xl border border-blue-200 bg-blue-50 px-4 py-3">
+              <div className="flex items-center">
+                <div className="mr-3 h-4 w-4 animate-spin rounded-full border-b-2 border-blue-600"></div>
+                <p className="text-sm font-medium text-blue-800">
+                  Updating task...
+                </p>
+              </div>
             </div>
-          </div>
-        )}
+          )}
 
-        <TaskForm
-          task={currentTask!}
-          onSubmit={handleSubmit}
-          onCancel={handleCancel}
-          submitButtonText="Save Changes"
-        />
-      </div>
-
-      {/* Help Text */}
-      <div className="mt-6 p-4 bg-gray-50 rounded-lg border border-gray-200">
-        <h3 className="text-sm font-medium text-gray-900 mb-2">
-          Editing Tips:
-        </h3>
-        <ul className="text-sm text-gray-600 space-y-1">
-          <li>• You can update any field except the task ID</li>
-          <li>• The updated timestamp will be set automatically</li>
-          <li>• Use status changes to track progress</li>
-          <li>• Adjust priority as requirements change</li>
-        </ul>
+          <TaskForm
+            task={currentTask!}
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            submitButtonText="Save Changes"
+          />
+        </div>
       </div>
     </div>
   );

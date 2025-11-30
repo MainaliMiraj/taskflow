@@ -3,7 +3,6 @@
 import { useEffect, useState, type DragEvent } from "react";
 import { useRouter } from "next/navigation";
 import TaskCard from "@/components/TaskCard";
-import FilterBar from "@/components/FilterBar";
 import SearchBar from "@/components/SearchBar";
 import TaskDetailsModal from "@/components/TaskDetailsModal";
 import { useTasks } from "@/hooks/useTasks";
@@ -59,15 +58,7 @@ export default function Dashboard() {
     getFilteredAndSortedTasks,
   } = useTasks();
 
-  const {
-    filters,
-    sortOptions,
-    searchTerm,
-    setSearchTerm,
-    handleStatusChange,
-    handlePriorityChange,
-    handleClear,
-  } = useTaskFilters();
+  const { filters, sortOptions, searchTerm, setSearchTerm } = useTaskFilters();
 
   const debouncedSearchTerm = useDebouncedValue(searchTerm, 500);
 
@@ -155,6 +146,14 @@ export default function Dashboard() {
   };
 
   const handleStatusUpdate = async (taskId: string, newStatus: TaskStatus) => {
+    const confirmed = confirm(
+      `Do you want to update your Task status to: "${formatStatusLabel(
+        newStatus
+      )}"?`
+    );
+
+    if (!confirmed) return;
+
     await updateTaskStatus(taskId, newStatus);
   };
 
@@ -191,28 +190,16 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Search + Sort + Filter */}
-      <div className="space-y-4">
-        <div className="flex flex-col justify-between gap-4">
-          <div className="flex-1">
-            <SearchBar
-              searchTerm={searchTerm}
-              onSearchChange={setSearchTerm}
-              placeholder="Search by title or description..."
-            />
-          </div>
+      <div className="flex flex-1">
+        <div className="w-full">
+          <SearchBar
+            searchTerm={searchTerm}
+            onSearchChange={setSearchTerm}
+            placeholder="Search by title or description..."
+          />
         </div>
-
-        <FilterBar
-          statusFilter={filters.status}
-          priorityFilter={filters.priority}
-          onStatusChange={handleStatusChange}
-          onPriorityChange={handlePriorityChange}
-          onClearFilters={handleClear}
-        />
       </div>
 
-      {/* Task count */}
       <div className="flex justify-between items-center">
         <p className="text-sm text-gray-600">
           Showing {filteredTasks.length} of {tasks.length} tasks
@@ -220,7 +207,6 @@ export default function Dashboard() {
         </p>
       </div>
 
-      {/* Task list */}
       {filteredTasks.length === 0 ? (
         <div className="text-center py-12">
           <div className="text-gray-400 mb-4">
