@@ -2,14 +2,16 @@ import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcrypt";
 import { connectDB } from "@/lib/db";
 import User from "@/models/User";
+import nodemailer from "nodemailer";
 
 export async function POST(req: NextRequest) {
-    console.log("Register API route hit");
+  console.log("Register API route hit");
   try {
     await connectDB();
 
     const body = await req.json();
-    const { name, email, password } = body
+    const { name, email, password } = body;
+
     if (!name || !email || !password) {
       return NextResponse.json(
         { message: "Name, email, and password are required." },
@@ -23,39 +25,54 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    console.log(name,email,password)
 
     const existingUser = await User.findOne({ email: email.toLowerCase() });
-    console.log("I am existing user",existingUser)
 
     if (existingUser) {
       return NextResponse.json(
         { message: "A user with this email already exists." },
-        { status: 409 } 
+        { status: 409 }
       );
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); 
+
     const newUser = await User.create({
       name: name.trim(),
       email: email.toLowerCase().trim(),
       password: hashedPassword,
+      verified: false,
+      otp,
+      otpExpires: otpExpiry,
     });
 
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-    const userResponse = {
-      id: newUser._id,
-      name: newUser.name,
-      email: newUser.email,
-      createdAt: newUser.createdAt,
-    };
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Your TaskFlow Verification Code",
+      html: `
+        <h2>Your OTP Code</h2>
+        <p>Your verification code is:</p>
+        <h1 style="font-size: 32px; letter-spacing: 4px;">${otp}</h1>
+        <p>This code expires in <strong>5 minutes</strong>.</p>
+      `,
+    });
 
-    // 8) Return success response
     return NextResponse.json(
       {
-        message: "User registered successfully.",
-        user: userResponse,
+        message: "OTP sent to your email. Please verify.",
+        email: newUser.email,
       },
       { status: 201 }
     );

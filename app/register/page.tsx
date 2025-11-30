@@ -25,8 +25,8 @@ export default function RegisterPage() {
     setLoading(false);
 
     if (res.ok) {
-      alert("Registration successful! Please login.");
-      router.push("/login");
+      alert("Registration successful! Please verify your email.");
+      router.push(`/verify-otp?email=${email}`);
     } else {
       alert("User already exists or registration failed");
     }

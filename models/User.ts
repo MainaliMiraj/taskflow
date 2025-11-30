@@ -8,6 +8,9 @@ export interface IUser extends Document {
   resetPasswordExpires?: Date | null;
   createdAt: Date;
   updatedAt: Date;
+  verified: boolean;
+  otp?: string | null;
+  otpExpires?: Date | null;
 }
 
 // Define the schema for the User collection
@@ -37,6 +40,18 @@ const UserSchema = new Schema<IUser>(
       default: null,
     },
     resetPasswordExpires: {
+      type: Date,
+      default: null,
+    },
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+    otp: {
+      type: String,
+      default: null,
+    },
+    otpExpires: {
       type: Date,
       default: null,
     },
