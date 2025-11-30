@@ -10,11 +10,16 @@ const barlow = Barlow({
 });
 
 export const metadata: Metadata = {
-  title: "Task Management App",
+  title: "TaskFlow",
   description:
     "A clean, modern task management application for testing practice",
   keywords: "task management, productivity, testing, automation",
-  authors: [{ name: "Task Management App" }],
+  authors: [{ name: "Miraj Mainali" }],
+  icons: {
+    icon: "/favicon.png",
+    shortcut: "/favicon.png",
+    apple: "/icon.png",
+  },
 };
 
 export const viewport = {

@@ -1,9 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { FaTasks } from "react-icons/fa";
 import { TbLogout } from "react-icons/tb";
 import { useRouter } from "next/navigation";
 import { logout } from "@/lib/auth";
+import Image from "next/image";
 
 export default function DashboardHeader() {
   const router = useRouter();
@@ -30,8 +30,10 @@ export default function DashboardHeader() {
   return (
     <header className="w-full bg-white border-b shadow-sm sticky top-0 z-30 ">
       <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3">
-        <div className="flex items-center gap-3">
-          <FaTasks className="text-primary-600 text-xl" />
+        <div className="flex items-center">
+          <div>
+            <Image src="/icon.png" width={50} height={50} alt="TaskFlow Logo" />
+          </div>
           <span className="text-xl font-semibold text-primary-800">
             Task Flow
           </span>
