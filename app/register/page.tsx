@@ -2,16 +2,47 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function RegisterPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [name, setName] = useState("");
   const router = useRouter();
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+
+  const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
+
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState("");
+
+  // Password strength checker
+  const checkStrength = (password: string) => {
+    if (password.length < 8) return "Too Weak";
+
+    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
+    const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+
+    if (strongRegex.test(password)) return "Strong";
+    if (mediumRegex.test(password)) return "Good";
+    return "Weak";
+  };
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
+    setError("");
+
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+    if (!strongPasswordRegex.test(password)) {
+      setError(
+        "Password must contain uppercase, lowercase, number, special character and be at least 8 characters long."
+      );
+      return;
+    }
+
     setLoading(true);
 
     const res = await fetch("/api/auth/register", {
@@ -25,33 +56,39 @@ export default function RegisterPage() {
     setLoading(false);
 
     if (res.ok) {
-      alert("Registration successful! Please verify your email.");
       router.push(`/verify-otp?email=${email}`);
     } else {
-      alert("User already exists or registration failed");
+      setError("User already exists or registration failed.");
     }
   };
 
   return (
-    <div className=" flex items-center justify-center  px-4 ">
+    <div className="flex items-center justify-center px-4 py-12">
       <div className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md">
         <h2 className="text-2xl font-semibold text-center mb-6">
           Create an Account
         </h2>
 
+        {error && (
+          <p className="text-red-600 text-center mb-4 text-sm">{error}</p>
+        )}
+
         <form onSubmit={handleRegister} className="space-y-4">
+          {/* Name */}
           <div>
             <label className="text-sm font-medium text-gray-600">
               Username
             </label>
             <input
-              type="name"
+              type="text"
               required
               className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 mt-1"
               placeholder="Enter your username"
               onChange={(e) => setName(e.target.value)}
             />
           </div>
+
+          {/* Email */}
           <div>
             <label className="text-sm font-medium text-gray-600">Email</label>
             <input
@@ -63,18 +100,50 @@ export default function RegisterPage() {
             />
           </div>
 
+          {/* Password + Toggle */}
           <div>
             <label className="text-sm font-medium text-gray-600">
               Password
             </label>
-            <input
-              type="password"
-              required
-              className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 mt-1"
-              placeholder="Create a password"
-              onChange={(e) => setPassword(e.target.value)}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                required
+                className="w-full px-4 py-2 border rounded-lg focus:ring focus:ring-blue-300 mt-1"
+                placeholder="Create a password"
+                onChange={(e) => {
+                  const val = e.target.value;
+                  setPassword(val);
+                  setPasswordStrength(checkStrength(val));
+                }}
+              />
+              <div
+                className="absolute right-3 top-3 cursor-pointer text-gray-500"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <FaEyeSlash /> : <FaEye />}
+              </div>
+            </div>
+
+            {/* Strength Meter */}
+            {password && (
+              <p
+                className={`text-sm mt-1 ${
+                  passwordStrength === "Strong"
+                    ? "text-green-600"
+                    : passwordStrength === "Good"
+                    ? "text-blue-600"
+                    : passwordStrength === "Weak"
+                    ? "text-orange-500"
+                    : "text-red-600"
+                }`}
+              >
+                Strength: {passwordStrength}
+              </p>
+            )}
           </div>
+
+          {/* Submit */}
           <button
             type="submit"
             disabled={loading}

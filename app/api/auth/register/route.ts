@@ -18,10 +18,19 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
 
-    if (password.length < 6) {
+    if (!strongPasswordRegex.test(password)) {
       return NextResponse.json(
-        { message: "Password must be at least 6 characters long." },
+        { message: "Weak password not allowed." },
+        { status: 400 }
+      );
+    }
+
+    if (password.length < 8) {
+      return NextResponse.json(
+        { message: "Password must be at least 8 characters long." },
         { status: 400 }
       );
     }
@@ -38,7 +47,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const otpExpiry = new Date(Date.now() + 5 * 60 * 1000); 
+    const otpExpiry = new Date(Date.now() + 5 * 60 * 1000);
 
     const newUser = await User.create({
       name: name.trim(),
