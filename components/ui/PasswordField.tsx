@@ -40,7 +40,7 @@ const PasswordField: React.FC<PasswordFieldProps> = ({
   const [showPassword, setShowPassword] = useState(false);
 
   return (
-    <div className="space-y-2">
+    <div>
       <label htmlFor={id} className="text-sm font-semibold text-gray-700">
         {label}
       </label>

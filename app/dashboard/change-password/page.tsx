@@ -64,8 +64,6 @@ export default function ChangePasswordPage() {
             required
             showPasswordCriteria={false}
           />
-
-          {/* NEW PASSWORD */}
           <PasswordField
             label="New Password"
             id="new-password"

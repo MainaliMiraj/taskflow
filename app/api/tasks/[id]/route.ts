@@ -71,7 +71,7 @@ export async function DELETE(
 ) {
   await connectDB();
 
-  const { id } = await context.params; // <-- FIX HERE
+  const { id } = await context.params;
 
   const token = req.cookies.get("token")?.value;
   if (!token) {

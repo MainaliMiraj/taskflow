@@ -2,54 +2,38 @@
 
 interface SearchBarProps {
   searchTerm: string;
-  onSearchChange: (searchTerm: string) => void;
+  onSearchChange: (value: string) => void;
+  onSearchSubmit: () => void;
   placeholder?: string;
 }
 
 export default function SearchBar({
   searchTerm,
   onSearchChange,
+  onSearchSubmit,
   placeholder = "Search tasks...",
 }: SearchBarProps) {
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    onSearchChange(e.target.value);
-  };
-
-  const clearSearch = () => {
-    onSearchChange("");
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") onSearchSubmit();
   };
 
   return (
-    <div className="relative">
+    <div className="flex items-center gap-2 w-full">
       <input
         type="text"
         value={searchTerm}
-        onChange={handleInputChange}
+        onChange={(e) => onSearchChange(e.target.value)}
+        onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className="input-field pr-10"
-        data-testid="search-input"
+        className="input-field w-full rounded-none"
       />
-      {searchTerm && (
-        <button
-          onClick={clearSearch}
-          className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-          data-testid="clear-search"
-        >
-          <svg
-            className="w-4 h-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      )}
+
+      <button
+        onClick={onSearchSubmit}
+        className="px-4 py-2 bg-primary-600 text-white  hover:bg-primary-700"
+      >
+        Search
+      </button>
     </div>
   );
 }

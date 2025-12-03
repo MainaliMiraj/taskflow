@@ -1,8 +1,8 @@
 import { NextResponse, NextRequest } from "next/server";
-import jwt from "jsonwebtoken";
-import { DecodedToken } from "@/types/auth";
 import { connectDB } from "@/lib/db";
 import Task from "@/models/Task";
+import jwt from "jsonwebtoken";
+import { DecodedToken } from "@/types/auth";
 
 export async function GET(req: NextRequest) {
   await connectDB();
@@ -19,12 +19,29 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
   }
 
-  const tasks = await Task.find({ userId: decoded.userId }).sort({
-    createdAt: -1,
-  });
+  const search = req.nextUrl.searchParams.get("search") || "";
 
-  return NextResponse.json({ tasks });
+  let query: any = { userId: decoded.userId };
+
+  if (search) {
+    query.$or = [
+      { title: { $regex: search, $options: "i" } },
+      { description: { $regex: search, $options: "i" } },
+    ];
+  }
+
+  // important: .lean() gives plain objects → easy to transform
+  const tasks = await Task.find(query).sort({ createdAt: -1 }).lean();
+
+  // Normalize _id → id
+  const formatted = tasks.map((t) => ({
+    ...t,
+    id: t._id.toString(),
+  }));
+
+  return NextResponse.json({ tasks: formatted });
 }
+
 export async function POST(req: NextRequest) {
   await connectDB();
 
