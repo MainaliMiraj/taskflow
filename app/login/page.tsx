@@ -2,6 +2,9 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import InputField from "@/components/ui/InputField";
+import PasswordField from "@/components/ui/PasswordField";
+import Navbar from "@/components/navbar/Navbar";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -39,64 +42,63 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
-      <div className="bg-white p-8 shadow-xl rounded-2xl w-full max-w-md border border-gray-100">
-        <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
-          Welcome Back 👋
-        </h2>
+    <div>
+      <Navbar />
+      <div className="flex items-center justify-center px-4">
+        <div className="p-6 sm:p-8 w-full max-w-lg mt-10">
+          <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+            Welcome Back 👋
+          </h2>
 
-        <form onSubmit={handleLogin} className="space-y-5">
-          <div>
-            <label className="text-sm font-semibold text-gray-700">Email</label>
-            <input
-              type="email"
-              required
-              className="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-300 mt-1 outline-none transition"
-              placeholder="you@example.com"
+          <form onSubmit={handleLogin} className="space-y-5">
+            <InputField
+              label="Email"
+              id="username"
               onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-semibold text-gray-700">
-              Password
-            </label>
-            <input
-              type="password"
               required
-              className="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-300 mt-1 outline-none transition"
-              placeholder="Enter your password"
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="you@example.com"
+              type="email"
+              value={email}
             />
-          </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary-600 text-white py-2.5 rounded-lg font-medium hover:bg-primary-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            {loading ? "Logging in..." : "Login"}
-          </button>
+            <PasswordField
+              id="password"
+              required
+              placeholder="Enter your password"
+              value={password}
+              label="Password"
+              onChange={(e) => setPassword(e.target.value)}
+              showPasswordCriteria={false}
+            />
 
-          <p className="text-center text-sm mt-2">
-            <a
-              href="/forgot-password"
-              className="text-primary-600 hover:underline"
+            <button
+              type="submit"
+              disabled={loading}
+              className="w-full bg-primary-600 text-white py-2.5 font-medium hover:bg-primary-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
             >
-              Forgot password?
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+            <p className="text-center text-sm mt-2">
+              <a
+                href="/forgot-password"
+                className="text-primary-600 hover:underline"
+              >
+                Forgot password?
+              </a>
+            </p>
+          </form>
+
+          <p className="text-center text-sm mt-6 text-gray-700">
+            Don’t have an account?{" "}
+            <a
+              href="/register"
+              className="text-primary-600 hover:underline font-medium"
+            >
+              Create one
             </a>
           </p>
-        </form>
-
-        <p className="text-center text-sm mt-6 text-gray-700">
-          Don’t have an account?{" "}
-          <a
-            href="/register"
-            className="text-primary-600 hover:underline font-medium"
-          >
-            Create one
-          </a>
-        </p>
+        </div>
       </div>
     </div>
   );

@@ -176,7 +176,7 @@ export default function Dashboard() {
             Task Dashboard
           </h1>
           <p className="text-gray-600 mt-1">
-            Manage your tasks efficiently with filters and sorting
+            Manage your tasks efficiently.
           </p>
         </div>
         <div>

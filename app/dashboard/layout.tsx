@@ -8,11 +8,9 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }) {
   return (
-    // <TaskProvider>
-    <>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
       <DashboardHeader />
       <main className="px-4 pt-4">{children}</main>
-      {/* </TaskProvider> */}
-    </>
+    </div>
   );
 }

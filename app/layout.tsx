@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Barlow } from "next/font/google";
+import { Toaster } from "react-hot-toast";
 
 import "./globals.css";
 
@@ -36,12 +37,15 @@ export default function RootLayout({
     <html lang="en">
       <body className={barlow.className}>
         <div className="min-h-screen bg-gray-100">
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <main className="">
             <main></main>
             {children}
+            <Toaster position="top-center"/>
           </main>
         </div>
       </body>
     </html>
   );
 }
+
+//max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4

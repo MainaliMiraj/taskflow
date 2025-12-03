@@ -2,46 +2,21 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { FaEye, FaEyeSlash } from "react-icons/fa";
+import PasswordField from "@/components/ui/PasswordField";
 
+import InputField from "@/components/ui/InputField";
 export default function RegisterPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [passwordStrength, setPasswordStrength] = useState("");
-
-  // Password strength checker
-  const checkStrength = (password: string) => {
-    if (password.length < 8) return "Too Weak";
-
-    const strongRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/;
-    const mediumRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
-
-    if (strongRegex.test(password)) return "Strong";
-    if (mediumRegex.test(password)) return "Good";
-    return "Weak";
-  };
 
   const handleRegister = async (e: any) => {
     e.preventDefault();
     setError("");
-
-    const strongPasswordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
-
-    if (!strongPasswordRegex.test(password)) {
-      setError(
-        "Password must contain uppercase, lowercase, number, special character and be at least 8 characters long."
-      );
-      return;
-    }
 
     setLoading(true);
 
@@ -63,106 +38,73 @@ export default function RegisterPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 bg-gray-50">
-      <div className="bg-white p-8 shadow-xl rounded-2xl w-full max-w-md border border-gray-100">
-        <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
-          Create an Account
-        </h2>
+    <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full margin-none ">
+        <div className="flex items-center justify-center  bg-gray-100 ">
+          <div className="p-8 w-3/4">
+            <h2 className="text-3xl font-bold text-center mb-6 bg-gradient-to-r from-primary-600 to-primary-400 bg-clip-text text-transparent">
+              Welcome to Taskflow
+            </h2>
 
-        {error && (
-          <p className="text-red-600 text-center mb-4 text-sm">{error}</p>
-        )}
+            {error && (
+              <p className="text-red-600 text-center mb-4 text-sm">{error}</p>
+            )}
 
-        <form onSubmit={handleRegister} className="space-y-5">
-          {/* Name */}
-          <div>
-            <label className="text-sm font-semibold text-gray-700">
-              Username
-            </label>
-            <input
-              type="text"
-              required
-              className="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-300 mt-1 outline-none transition"
-              placeholder="Enter your username"
-              onChange={(e) => setName(e.target.value)}
-            />
-          </div>
-
-          {/* Email */}
-          <div>
-            <label className="text-sm font-semibold text-gray-700">Email</label>
-            <input
-              type="email"
-              required
-              className="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-300 mt-1 outline-none transition"
-              placeholder="you@example.com"
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
-
-          {/* Password + Toggle */}
-          <div>
-            <label className="text-sm font-semibold text-gray-700">
-              Password
-            </label>
-            <div className="relative">
-              <input
-                type={showPassword ? "text" : "password"}
+            <form onSubmit={handleRegister} className="space-y-5">
+              <InputField
+                label="Username"
+                id="username"
                 required
-                className="w-full px-4 py-2.5 border rounded-lg focus:ring-2 focus:ring-primary-300 mt-1 outline-none transition"
-                placeholder="Create a password"
-                onChange={(e) => {
-                  const val = e.target.value;
-                  setPassword(val);
-                  setPasswordStrength(checkStrength(val));
-                }}
+                placeholder="Enter your username"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
               />
 
-              <div
-                className="absolute right-3 top-5 cursor-pointer text-gray-500"
-                onClick={() => setShowPassword(!showPassword)}
-              >
-                {showPassword ? <FaEyeSlash /> : <FaEye />}
-              </div>
-            </div>
+              <InputField
+                label="Email"
+                id="email"
+                required
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
 
-            {/* Strength Meter */}
-            {password && (
-              <p
-                className={`text-sm mt-1 ${
-                  passwordStrength === "Strong"
-                    ? "text-green-600"
-                    : passwordStrength === "Good"
-                    ? "text-blue-600"
-                    : passwordStrength === "Weak"
-                    ? "text-orange-500"
-                    : "text-red-600"
-                }`}
+              <PasswordField
+                label="Password"
+                id="password"
+                required
+                placeholder="Create a password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                showPasswordCriteria={true}
+              />
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-primary-600 text-white py-2.5  font-medium hover:bg-primary-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
               >
-                Strength: {passwordStrength}
-              </p>
-            )}
+                {loading ? "Creating account..." : "Sign Up"}
+              </button>
+            </form>
+
+            <p className="text-center text-sm mt-6 text-gray-700">
+              Already have an account?{" "}
+              <a
+                href="/login"
+                className="text-primary-600 hover:underline font-medium"
+              >
+                Login
+              </a>
+            </p>
           </div>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-primary-600 text-white py-2.5 rounded-lg font-medium hover:bg-primary-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-          >
-            {loading ? "Creating account..." : "Sign Up"}
-          </button>
-        </form>
-
-        <p className="text-center text-sm mt-6 text-gray-700">
-          Already have an account?{" "}
-          <a
-            href="/login"
-            className="text-primary-600 hover:underline font-medium"
-          >
-            Login
-          </a>
-        </p>
+        </div>
+        <div
+          className="hidden md:block h-screen bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/login-img.webp')",
+          }}
+        ></div>
       </div>
     </div>
   );
