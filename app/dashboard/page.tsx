@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import TaskCard from "@/components/TaskCard";
 import SearchBar from "@/components/SearchBar";
-import TaskDetailsModal from "@/components/TaskDetailsModal";
 import { useTasks } from "@/hooks/useTasks";
 
 import { Task, TaskStatus } from "@/types/task";

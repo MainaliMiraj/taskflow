@@ -20,14 +20,3 @@ export interface TaskFormData {
   status: TaskStatus;
   dueDate: string;
 }
-
-export interface TaskFilters {
-  status?: TaskStatus;
-  priority?: TaskPriority;
-  searchTerm?: string;
-}
-
-export interface TaskSortOptions {
-  sortBy: "dueDate" | "priority" | "createdAt";
-  sortOrder: "asc" | "desc";
-}
