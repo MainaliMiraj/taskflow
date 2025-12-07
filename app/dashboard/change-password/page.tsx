@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import PasswordField from "@/components/ui/PasswordField";
+import toast from "react-hot-toast";
 
 export default function ChangePasswordPage() {
   const router = useRouter();
@@ -36,7 +37,7 @@ export default function ChangePasswordPage() {
     const data = await res.json();
 
     if (res.ok) {
-      alert("Password updated successfully. Please login again.");
+      toast.success("Password updated successfully. Please login again.");
       router.push("/login");
     } else {
       setError(data.error || "Something went wrong.");

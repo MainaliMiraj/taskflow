@@ -4,13 +4,13 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { TaskFormData, Task } from "@/types/task";
 import TaskForm from "@/components/TaskForm";
+import toast from "react-hot-toast";
 
 export default function EditTaskPage() {
   const router = useRouter();
   const params = useParams();
   const taskId = params.id as string;
 
-  // const { tasks, updateTask, getTask } = useTasks();
   const [currentTask, setCurrentTask] = useState<Task | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -59,8 +59,7 @@ export default function EditTaskPage() {
       setCurrentTask(data.task);
       router.push("/dashboard");
     } catch (error) {
-      console.error(error);
-      alert("Failed to update task. Please try again.");
+      toast.error("Failed to update task. Please try again.");
     } finally {
       setIsSubmitting(false);
     }

@@ -1,41 +1,37 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import InputField from "@/components/ui/InputField";
-import PasswordField from "@/components/ui/PasswordField";
 import Navbar from "@/components/navbar/Navbar";
+import AuthForm, { AuthFormValues } from "@/components/auth/AuthForm";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleLogin = async (e: any) => {
-    e.preventDefault();
-    setLoading(true);
-
+  const handleLogin = async ({
+    email,
+    password,
+    setLoading,
+  }: AuthFormValues) => {
     try {
       const res = await fetch("/api/auth/login", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json();
+
       if (!res.ok) {
-        const data = await res.json();
-        alert(data.message || "Invalid Email or Password");
+        toast.error("Invalid Email or Password");
         setLoading(false);
         return;
       }
 
+      toast.success("Welcome back!");
       router.push("/dashboard");
-    } catch (error) {
-      console.log("error", error);
-      alert("Something went wrong. Try again.");
+    } catch {
+      toast.error("Something went wrong.");
     } finally {
       setLoading(false);
     }
@@ -50,44 +46,7 @@ export default function LoginPage() {
             Welcome Back 👋
           </h2>
 
-          <form onSubmit={handleLogin} className="space-y-5">
-            <InputField
-              label="Email"
-              id="username"
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              placeholder="you@example.com"
-              type="email"
-              value={email}
-            />
-
-            <PasswordField
-              id="password"
-              required
-              placeholder="Enter your password"
-              value={password}
-              label="Password"
-              onChange={(e) => setPassword(e.target.value)}
-              showPasswordCriteria={false}
-            />
-
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-primary-600 text-white py-2.5 font-medium hover:bg-primary-700 transition disabled:bg-gray-300 disabled:cursor-not-allowed"
-            >
-              {loading ? "Logging in..." : "Login"}
-            </button>
-
-            <p className="text-center text-sm mt-2">
-              <a
-                href="/forgot-password"
-                className="text-primary-600 hover:underline"
-              >
-                Forgot password?
-              </a>
-            </p>
-          </form>
+          <AuthForm submitLabel="Login" onSubmit={handleLogin} />
 
           <p className="text-center text-sm mt-6 text-gray-700">
             Don’t have an account?{" "}

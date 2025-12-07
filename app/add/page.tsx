@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { TaskFormData } from "@/types/task";
 import TaskForm from "@/components/TaskForm";
+import toast from "react-hot-toast";
 
 export default function AddTaskPage() {
   const router = useRouter();
@@ -34,20 +35,13 @@ export default function AddTaskPage() {
       router.push("/dashboard");
     } catch (error: any) {
       console.log("error adding the task", error);
-      alert(
-        error.message ||
-          "There was an error creating the task. Please try again."
-      );
+      toast.error(error.message || "There was an error creating the task.");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleCancel = () => {
-    const confirmed = confirm(
-      `Are you sure you want to cancel? All changes will be lost.`
-    );
-    if (!confirmed) return;
     router.push("/dashboard");
   };
 

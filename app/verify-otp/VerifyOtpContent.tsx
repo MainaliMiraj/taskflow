@@ -2,28 +2,26 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function VerifyOtpContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const email = searchParams.get("email");
+  const email = useSearchParams().get("email");
 
-  const [otp, setOtp] = useState(["", "", "", "", "", ""]);
+  const [otp, setOtp] = useState(Array(6).fill(""));
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!email) {
-      router.replace("/register");
-    }
+    if (!email) router.replace("/register");
   }, [email, router]);
 
   const handleChange = (value: string, index: number) => {
-    if (!/^[0-9]?$/.test(value)) return;
+    if (!/^\d?$/.test(value)) return;
 
-    const newOtp = [...otp];
-    newOtp[index] = value;
-    setOtp(newOtp);
+    const updated = [...otp];
+    updated[index] = value;
+    setOtp(updated);
 
     if (value && index < 5) {
       document.getElementById(`otp-${index + 1}`)?.focus();
@@ -33,31 +31,34 @@ export default function VerifyOtpContent() {
   const handleVerify = async () => {
     setError("");
 
-    if (otp.some((d) => d === "")) {
-      setError("Please enter the full 6-digit code.");
-      return;
+    if (otp.includes("")) {
+      return setError("Please enter the full 6-digit code.");
     }
 
-    const finalOtp = otp.join("");
     setLoading(true);
 
-    const res = await fetch("/api/auth/verify-otp", {
-      method: "POST",
-      body: JSON.stringify({ email, otp: finalOtp }),
-      headers: { "Content-Type": "application/json" },
-    });
+    try {
+      const res = await fetch("/api/auth/verify-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, otp: otp.join("") }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        toast.error(data.message || "Verification failed.");
+        setError(data.message || "Verification failed.");
+        return;
+      }
+
+      toast.success("Verification complete. Please login.");
+      router.push("/login");
+    } catch (err) {
+      setError("Something went wrong. Try again.");
+    }
 
     setLoading(false);
-
-    if (res.ok) {
-      alert(
-        "Email and password verification complete. Please proceed to login."
-      );
-      router.push("/login");
-    } else {
-      const data = await res.json();
-      setError(data.message || "Verification failed.");
-    }
   };
 
   return (
@@ -69,13 +70,13 @@ export default function VerifyOtpContent() {
         </p>
 
         <div className="flex justify-center gap-3 mb-6">
-          {otp.map((digit, index) => (
+          {otp.map((digit, idx) => (
             <input
-              key={index}
-              id={`otp-${index}`}
+              key={idx}
+              id={`otp-${idx}`}
               maxLength={1}
               value={digit}
-              onChange={(e) => handleChange(e.target.value, index)}
+              onChange={(e) => handleChange(e.target.value, idx)}
               className="w-12 h-12 border border-gray-300 text-center text-xl rounded-md 
               focus:ring-2 focus:ring-indigo-500"
             />

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useParams } from "next/navigation";
 import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
 
 export default function ResetPasswordPage() {
   const params = useParams();
@@ -27,7 +28,7 @@ export default function ResetPasswordPage() {
     if (res.ok) {
       setChanged(true);
     } else {
-      alert("Reset failed");
+      toast.error("Something went wrong. Please try again after some time.");
     }
   };
   const handleLogin = () => {

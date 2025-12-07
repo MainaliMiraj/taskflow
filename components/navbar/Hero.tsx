@@ -11,7 +11,7 @@ const TYPED_STRINGS = [
 
 export default function Hero() {
   return (
-    <section className="max-w-7xl mx-auto px-6 mt-20 flex flex-col justify-center">
+    <section className="max-w-7xl mx-auto px-6 mt-40 flex flex-col justify-center">
       <div className="max-w-4xl mx-auto text-center">
         <div className="inline-flex items-center gap-2 bg-blue-100 text-primary-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
           <FaCheckCircle />

@@ -44,7 +44,6 @@ export default function Dashboard() {
   // Get tasks + manual fetch
   const { tasks, loading, fetchTasks } = useTasks();
 
-  // Fetch initial tasks on load
   useEffect(() => {
     fetchTasks(initialQuery);
   }, []);

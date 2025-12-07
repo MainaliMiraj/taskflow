@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import toast from "react-hot-toast";
 
 export default function ForgotPassword() {
   const [email, setEmail] = useState("");
@@ -19,7 +20,7 @@ export default function ForgotPassword() {
     if (res.ok) {
       setSent(true);
     } else {
-      alert("Failed to send reset link");
+      toast.error("Failed to send the reset link. Please try again.");
     }
   };
 
