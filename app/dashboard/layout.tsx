@@ -1,6 +1,7 @@
 "use client";
 
 import DashboardHeader from "@/components/DashboardHeader";
+import { Suspense } from "react";
 
 export default function DashboardLayout({
   children,

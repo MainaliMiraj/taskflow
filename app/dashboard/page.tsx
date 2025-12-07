@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type DragEvent } from "react";
+import { useEffect, useState, type DragEvent, Suspense } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import TaskCard from "@/components/TaskCard";
@@ -119,87 +119,89 @@ export default function Dashboard() {
     );
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900">Task Dashboard</h1>
-          <p className="text-gray-600 mt-1">Manage your tasks efficiently.</p>
+    <Suspense fallback={<div>Loading...</div>}>
+      <div className="space-y-6">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-gray-900">Task Dashboard</h1>
+            <p className="text-gray-600 mt-1">Manage your tasks efficiently.</p>
+          </div>
+
+          <button
+            onClick={() => router.push("/add")}
+            className="btn-primary rounded-none"
+          >
+            + Add Task
+          </button>
         </div>
 
-        <button
-          onClick={() => router.push("/add")}
-          className="btn-primary rounded-none"
-        >
-          + Add Task
-        </button>
-      </div>
+        {/* Search Bar */}
+        <SearchBar
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onSearchSubmit={handleSearchSubmit}
+          placeholder="Search tasks..."
+        />
 
-      {/* Search Bar */}
-      <SearchBar
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onSearchSubmit={handleSearchSubmit}
-        placeholder="Search tasks..."
-      />
+        {/* Task Count */}
+        <p className="text-sm text-gray-600">Showing {tasks.length} tasks</p>
 
-      {/* Task Count */}
-      <p className="text-sm text-gray-600">Showing {tasks.length} tasks</p>
+        {/* Columns */}
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {columns.map((column) => {
+            const columnTasks = tasks.filter((t) => t.status === column.status);
 
-      {/* Columns */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        {columns.map((column) => {
-          const columnTasks = tasks.filter((t) => t.status === column.status);
+            const isDragActive = draggedOverStatus === column.status;
 
-          const isDragActive = draggedOverStatus === column.status;
-
-          return (
-            <div
-              key={column.status}
-              className={`flex flex-col rounded-xl border bg-slate-50 p-4 transition-colors ${
-                isDragActive
-                  ? "border-primary-400 bg-primary-50"
-                  : "border-slate-200"
-              }`}
-              onDrop={(e) => handleDrop(e, column.status)}
-              onDragOver={handleDragOver}
-              onDragEnter={() => setDraggedOverStatus(column.status)}
-              onDragLeave={() => setDraggedOverStatus(null)}
-            >
-              <div className="mb-4">
-                <div className="flex items-center justify-between">
-                  <h2 className="text-lg font-semibold text-gray-900">
-                    {column.title}
-                  </h2>
-                  <span className="rounded-full bg-white px-3 py-1 text-sm font-medium text-gray-600">
-                    {columnTasks.length}
-                  </span>
-                </div>
-                <p className="text-sm text-gray-500">{column.description}</p>
-              </div>
-
-              <div className="flex flex-1 flex-col gap-4">
-                {columnTasks.length === 0 ? (
-                  <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
-                    Drag a task here
+            return (
+              <div
+                key={column.status}
+                className={`flex flex-col rounded-xl border bg-slate-50 p-4 transition-colors ${
+                  isDragActive
+                    ? "border-primary-400 bg-primary-50"
+                    : "border-slate-200"
+                }`}
+                onDrop={(e) => handleDrop(e, column.status)}
+                onDragOver={handleDragOver}
+                onDragEnter={() => setDraggedOverStatus(column.status)}
+                onDragLeave={() => setDraggedOverStatus(null)}
+              >
+                <div className="mb-4">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-lg font-semibold text-gray-900">
+                      {column.title}
+                    </h2>
+                    <span className="rounded-full bg-white px-3 py-1 text-sm font-medium text-gray-600">
+                      {columnTasks.length}
+                    </span>
                   </div>
-                ) : (
-                  columnTasks.map((task) => (
-                    <TaskCard
-                      key={task.id}
-                      task={task}
-                      draggable
-                      onDragStart={() => handleCardDragStart(task.id)}
-                      onDragEnd={handleCardDragEnd}
-                      onSelect={() => {}}
-                    />
-                  ))
-                )}
+                  <p className="text-sm text-gray-500">{column.description}</p>
+                </div>
+
+                <div className="flex flex-1 flex-col gap-4">
+                  {columnTasks.length === 0 ? (
+                    <div className="flex flex-1 items-center justify-center rounded-lg border-2 border-dashed border-slate-200 bg-white px-4 py-8 text-center text-sm text-gray-500">
+                      Drag a task here
+                    </div>
+                  ) : (
+                    columnTasks.map((task) => (
+                      <TaskCard
+                        key={task.id}
+                        task={task}
+                        draggable
+                        onDragStart={() => handleCardDragStart(task.id)}
+                        onDragEnd={handleCardDragEnd}
+                        onSelect={() => {}}
+                      />
+                    ))
+                  )}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
-    </div>
+    </Suspense>
   );
 }
