@@ -7,7 +7,7 @@ import type { DragEvent } from "react";
 interface TaskCardProps {
   task: Task;
   draggable?: boolean;
-  onDragStart?: (e: DragEvent<HTMLDivElement>, id: string) => void; // UPDATED
+  onDragStart?: (e: DragEvent<HTMLDivElement>, id: string) => void; 
   onDragEnd?: () => void;
   onSelect?: (task: Task) => void;
 }
