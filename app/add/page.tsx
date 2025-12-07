@@ -11,10 +11,6 @@ export default function AddTaskPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (formData: TaskFormData) => {
-    const confirmed = confirm(`Confirm task creation`);
-
-    if (!confirmed) return;
-
     setIsSubmitting(true);
 
     try {
@@ -34,7 +30,6 @@ export default function AddTaskPage() {
 
       router.push("/dashboard");
     } catch (error: any) {
-      console.log("error adding the task", error);
       toast.error(error.message || "There was an error creating the task.");
     } finally {
       setIsSubmitting(false);

@@ -7,7 +7,7 @@ import type { DragEvent } from "react";
 interface TaskCardProps {
   task: Task;
   draggable?: boolean;
-  onDragStart?: (id: string) => void;
+  onDragStart?: (e: DragEvent<HTMLDivElement>, id: string) => void; // UPDATED
   onDragEnd?: () => void;
   onSelect?: (task: Task) => void;
 }
@@ -47,7 +47,7 @@ export default function TaskCard({
     e.dataTransfer.setData("text/plain", task.id);
     e.dataTransfer.effectAllowed = "move";
     setIsDragging(true);
-    onDragStart?.(task.id);
+    onDragStart?.(e, task.id); // UPDATED
   };
 
   const handleDragEnd = () => {
@@ -62,7 +62,7 @@ export default function TaskCard({
 
   return (
     <div
-      className="group relative cursor-pointer overflow-hidden  border border-slate-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-lg"
+      className="group relative cursor-pointer overflow-hidden border border-slate-200 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:border-primary-300 hover:shadow-lg"
       data-testid={`task-card-${task.id}`}
       draggable={draggable}
       onDragStart={handleDragStart}
@@ -70,7 +70,7 @@ export default function TaskCard({
       onClick={handleSelect}
     >
       <div
-        className="absolute right-4 top-4 h-16 w-16  bg-primary-200/80 blur-3xl transition-opacity group-hover:opacity-80"
+        className="absolute right-4 top-4 h-16 w-16 bg-primary-200/80 blur-3xl transition-opacity group-hover:opacity-80"
         aria-hidden
       />
       <div className="flex items-center justify-between text-gray-500 text-xs">
@@ -81,8 +81,9 @@ export default function TaskCard({
           {task.title}
         </h3>
         <div className="flex items-center gap-2 capitalize"></div>
-        Due: {formatDate(task.dueDate)}
+        Created: {formatDate(task.createdAt)}
       </div>
+
       <div className="mt-3">
         {task.description && (
           <p
@@ -93,6 +94,7 @@ export default function TaskCard({
           </p>
         )}
       </div>
+
       <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
         <span
           className={`inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ${getPriorityColor(
@@ -103,7 +105,7 @@ export default function TaskCard({
           {task.priority} priority
         </span>
         <span data-testid={`task-created-date-${task.id}`}>
-          Created: {formatDate(task.createdAt)}
+          Due: {formatDate(task.dueDate)}
         </span>
       </div>
     </div>
