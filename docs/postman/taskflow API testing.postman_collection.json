@@ -1,0 +1,225 @@
+{
+	"info": {
+		"_postman_id": "71986650-a353-4624-9c96-c4fceaae91a3",
+		"name": "taskflow API testing",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "37473809"
+	},
+	"item": [
+		{
+			"name": "login",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"tempforall19@gmail.com\",\n    \"password\": \"Mirage@008\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/auth/login"
+			},
+			"response": []
+		},
+		{
+			"name": "getUsernameEmail",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"User is authenticated\", () => {",
+							"  pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Correct user returned\", () => {",
+							"  const json = pm.response.json();",
+							"  pm.expect(json.user.email).to.eql(\"tempforall19@gmail.com\");",
+							"  pm.expect(json.user.name).to.eql(\"Merazz\")",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/me"
+			},
+			"response": []
+		},
+		{
+			"name": "getUsernameEmailWithoutAuth",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/me"
+			},
+			"response": []
+		},
+		{
+			"name": "getAllTask",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/tasks"
+			},
+			"response": []
+		},
+		{
+			"name": "createTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"const json = pm.response.json();",
+							"",
+							"pm.test(\"Task created successfully\", () => {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(json.message).to.eql(\"Task created successfully\");",
+							"});",
+							"",
+							"pm.test(\"Task has an ID\", () => {",
+							"    pm.expect(json.task._id).to.exist;",
+							"});",
+							"",
+							"// Save taskId for future requests",
+							"pm.environment.set(\"taskId\", json.task._id);",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"title\": \"postman createTask test\",\n    \"description\": \"postman createTask test description\",\n    \"dueDate\":\"2026-12-10\"\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/tasks"
+			},
+			"response": []
+		},
+		{
+			"name": "deleteTask",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"status\":\"completed\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/tasks/{{taskId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "getTaskById",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/tasks/{{taskId}}"
+			},
+			"response": []
+		},
+		{
+			"name": "updateTask",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"tempforall19@gmail.com\",\n    \"password\": \"Mirage@008\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseURL}}/api/tasks/{{taskId}}"
+			},
+			"response": []
+		}
+	]
+}

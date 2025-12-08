@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import AuthForm, { AuthFormValues } from "@/components/auth/AuthForm";
+import AuthForm, { AuthFormValues } from "@/components/authComponent/AuthForm";
 import toast from "react-hot-toast";
 
 export default function RegisterPage() {

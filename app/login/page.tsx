@@ -1,7 +1,7 @@
 "use client";
 
 import Navbar from "@/components/navbar/Navbar";
-import AuthForm, { AuthFormValues } from "@/components/auth/AuthForm";
+import AuthForm, { AuthFormValues } from "@/components/authComponent/AuthForm";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 
