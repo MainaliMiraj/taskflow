@@ -12,9 +12,6 @@ The collection covers:
 * Negative security testing (missing/invalid token)
 * Chained requests using Postman environment variables
 
-This documentation is designed for recruiters, engineers, and QA reviewers who want to quickly understand the testing workflow and coverage.
-
----
 
 # 🚀 Getting Started
 
