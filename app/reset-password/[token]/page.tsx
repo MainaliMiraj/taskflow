@@ -1,39 +1,9 @@
 "use client";
 
-import { useState } from "react";
-import { useParams } from "next/navigation";
-import { useRouter } from "next/navigation";
-import toast from "react-hot-toast";
+import {useAddNewPassword} from "@/hooks/useAddNewPassword";
 
 export default function ResetPasswordPage() {
-  const params = useParams();
-  const token = params.token as string;
-  const router = useRouter();
-
-  const [password, setPassword] = useState("");
-  const [changed, setChanged] = useState(false);
-  const [showing, setShowing] = useState(false);
-
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-
-    const res = await fetch("/api/auth/reset-password", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ token, password }),
-    });
-
-    if (res.ok) {
-      setChanged(true);
-    } else {
-      toast.error("Something went wrong. Please try again after some time.");
-    }
-  };
-  const handleLogin = () => {
-    router.push("/login");
-  };
+  const { handleSubmit,showing, setShowing, setPassword} = useAddNewPassword()
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
@@ -41,20 +11,6 @@ export default function ResetPasswordPage() {
         <h2 className="text-2xl font-semibold text-center mb-6">
           Create New Password
         </h2>
-
-        {changed ? (
-          <>
-            <div className="text-center text-green-600">
-              Password changed successfully.
-              <button
-                onClick={handleLogin}
-                className="underline hover:text-primary-600 cursor-pointer"
-              >
-                Click here to login
-              </button>
-            </div>
-          </>
-        ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="text-sm font-medium text-gray-600">
@@ -85,7 +41,7 @@ export default function ResetPasswordPage() {
               Reset Password
             </button>
           </form>
-        )}
+
       </div>
     </div>
   );

@@ -1,32 +1,11 @@
 "use client";
 
-import { useRouter } from "next/navigation";
-import AuthForm, { AuthFormValues } from "@/components/authComponent/AuthForm";
-import toast from "react-hot-toast";
+import AuthForm from "@/components/authComponent/AuthForm";
+import {useRegister} from "@/hooks/useRegister";
 
 export default function RegisterPage() {
-  const router = useRouter();
 
-  const handleRegister = async ({
-    name,
-    email,
-    password,
-    setLoading,
-  }: AuthFormValues) => {
-    const res = await fetch("/api/auth/register", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, password }),
-    });
-
-    setLoading(false);
-
-    if (res.ok) {
-      router.push(`/verify-otp?email=${email}`);
-    } else {
-      toast.error("Something went wrong. Please try again.");
-    }
-  };
+const { handleRegister } = useRegister();
 
   return (
     <div>

@@ -1,42 +1,13 @@
 "use client";
 
 import Navbar from "@/components/navbar/Navbar";
-import AuthForm, { AuthFormValues } from "@/components/authComponent/AuthForm";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
+import AuthForm from "@/components/authComponent/AuthForm";
+import {useLogin} from "@/hooks/useLogin";
+import Link from "next/link";
+
 
 export default function LoginPage() {
-  const router = useRouter();
-
-  const handleLogin = async ({
-    email,
-    password,
-    setLoading,
-  }: AuthFormValues) => {
-    try {
-      const res = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        toast.error("Invalid Email or Password");
-        setLoading(false);
-        return;
-      }
-
-      toast.success("Welcome back!");
-      router.push("/dashboard");
-    } catch {
-      toast.error("Something went wrong.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
+  const { handleLogin } = useLogin();
   return (
     <div>
       <Navbar />
@@ -56,6 +27,16 @@ export default function LoginPage() {
             >
               Create one
             </a>
+          </p>
+
+          <p className="text-center text-sm mt-6 text-gray-700">
+          Forgot?
+            <Link
+                href="/forgot-password"
+                className="text-primary-600 hover:underline font-medium"
+            >
+              {" "}Reset Password
+            </Link>
           </p>
         </div>
       </div>

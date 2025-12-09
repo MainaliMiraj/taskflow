@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-export function useTasks() {
+export function useGetTasks() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -14,7 +14,9 @@ export function useTasks() {
         `/api/tasks?search=${encodeURIComponent(search)}`
       );
       const data = await res.json();
-
+      console.log({
+        tasks1: data.tasks,
+      })
       setTasks(data.tasks || []);
     } catch (error) {
       console.error("Failed to fetch tasks", error);
