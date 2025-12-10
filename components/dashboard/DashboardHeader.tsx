@@ -71,7 +71,7 @@ export default function DashboardHeader() {
                     <button
                       onClick={() => {
                         setOpen(false);
-                        router.push("/dashboard/change-password");
+                        router.push("/dashboard/update-password");
                       }}
                       className="w-full text-left px-4 py-2 rounded-full hover:bg-indigo-600 text-gray-700 hover:text-white"
                     >

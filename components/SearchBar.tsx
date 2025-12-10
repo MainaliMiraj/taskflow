@@ -1,6 +1,7 @@
 "use client";
 
 import { RxCross2 } from "react-icons/rx";
+import React from "react";
 
 interface SearchBarProps {
   searchTerm: string;

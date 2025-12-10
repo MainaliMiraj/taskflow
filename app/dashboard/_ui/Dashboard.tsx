@@ -166,10 +166,11 @@ export default function Dashboard() {
                 onEdit={async (taskId, updatedTask) => {
                   await handleSubmit(taskId, updatedTask, "edit");
                   await fetchTasks(searchTerm);
-                  setSelectedTask((prev) => ({ ...prev, ...updatedTask }));
+                  setSelectedTask(prev => (prev ? { ...prev, ...updatedTask } : prev));
+
                 }}
                 onDelete={async (taskId) => {
-                  await handleSubmit(taskId, null, "delete");
+                  await handleSubmit(taskId, undefined, "delete");
                   await fetchTasks(searchTerm);
                   setSelectedTask(null);
                   setModalMode(null);
@@ -177,7 +178,11 @@ export default function Dashboard() {
                 onStatusChange={async (taskId, newStatus) => {
                   await handleSubmit(taskId, { status: newStatus }, "edit");
                   await fetchTasks(searchTerm);
-                  setSelectedTask((prev) => ({ ...prev, status: newStatus }));
+                  setSelectedTask(prev => {
+                    if (!prev) return null;
+                    return { ...prev, status: newStatus };
+                  });
+
                 }}
             />
         )}

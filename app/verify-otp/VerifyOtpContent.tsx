@@ -62,7 +62,7 @@ export default function VerifyOtpContent() {
   };
 
   return (
-    <div className="flex items-center justify-center px-4 h-screen bg-gray-50">
+    <div className="flex items-center justify-center px-4  mt-12">
       <div className="bg-white p-8 shadow-lg rounded-lg w-full max-w-md text-center">
         <h2 className="text-2xl font-semibold mb-4">Verify Your Email</h2>
         <p className="text-gray-600 text-sm mb-6">

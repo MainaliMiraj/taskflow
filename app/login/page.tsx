@@ -29,7 +29,7 @@ export default function LoginPage() {
             </a>
           </p>
 
-          <p className="text-center text-sm mt-6 text-gray-700">
+          <p className="text-center text-sm mt-2 text-gray-700">
           Forgot?
             <Link
                 href="/forgot-password"

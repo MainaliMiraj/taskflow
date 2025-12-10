@@ -4,7 +4,7 @@ import {useApiRequest} from "@/hooks/useApiRequest";
 export const useUpdateTasks = (fetchTasks:any) => {
   const { sendRequest, loading } = useApiRequest();
 
-  const handleSubmit = async (taskId?: string, formData?: Partial<Task>, action?: "add" | "edit" | "delete") => {
+  const handleSubmit = async (taskId?: string|null, formData?: Partial<Task>, action?: "add" | "edit" | "delete") => {
     let url = "/api/tasks";
     let method: "POST" | "PUT" | "DELETE" = "POST";
 

@@ -1,7 +1,6 @@
-import {useParams, useRouter} from "next/navigation";
-import {useApiRequest} from "@/hooks/useApiRequest";
-import {useState} from "react";
-import toast from "react-hot-toast";
+import { useParams, useRouter } from "next/navigation";
+import { useApiRequest } from "@/hooks/useApiRequest";
+import { useState } from "react";
 
 export const useAddNewPassword = () => {
     const router = useRouter();
@@ -10,7 +9,6 @@ export const useAddNewPassword = () => {
 
     const { sendRequest, loading } = useApiRequest();
     const [password, setPassword] = useState("");
-    const [showing, setShowing] = useState(false);
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -18,16 +16,15 @@ export const useAddNewPassword = () => {
         await sendRequest({
             url: "/api/auth/reset-password",
             body: { token, password },
-            successMessage: "Password changed successfully.",
+            successMessage: "Password updated successfully!",
             onSuccess: () => router.push("/login"),
-            onError: () => toast.error("Something went wrong. Please try again after some time.")
         });
-
     };
+
     return {
         handleSubmit,
+        password,
+        setPassword,
         loading,
-        showing, setShowing,
-        password, setPassword
-    }
-}
+    };
+};

@@ -32,15 +32,14 @@ export const useApiRequest = () => {
 
             const data = await res.json();
 
-            if (!res.ok) throw new Error(data.message || "Request failed");
+            if (!res.ok) throw new Error(data.message || "Request failed")
 
             successMessage && toast.success(successMessage);
             onSuccess?.(data);
             return data;
         } catch (error: any) {
-            toast.error(error.message || "Something went wrong.");
-            onError?.(error);
-            throw error;
+            toast.error(error.message);
+            onError?.(error)
         } finally {
             setLoading(false);
         }
