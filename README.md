@@ -1,7 +1,6 @@
 # **Taskflow – Modern Task Management Platform**
 
-A production-grade task board built on the **Next.js App Router**, **Tailwind CSS**, and a secure **MongoDB backend**.
-Taskflow keeps busy teams organized with clean CRUD flows, drag-and-drop columns, and a JWT-protected API surface that’s easy to extend.
+A production-grade task board built on the **Next.js App Router**, **Tailwind CSS**, and a secure **MongoDB backend**. Taskflow now includes OTP-backed registration, JWT cookies for sessions, and strong password tooling to keep workspaces safe.
 
 <p align="center">
   <img src="https://img.shields.io/badge/Next.js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" alt="Next.js" />
@@ -26,7 +25,7 @@ Taskflow keeps busy teams organized with clean CRUD flows, drag-and-drop columns
 5. [Getting Started](#getting-started)
 6. [Environment Variables](#environment-variables)
 7. [API Overview](#api-overview)
-8. [Available Scripts](#available-scripts)
+8. [Testing](#testing)
 9. [Manual QA Checklist](#manual-qa-checklist)
 10. [Contributing](#contributing)
 11. [License](#license)
@@ -35,81 +34,45 @@ Taskflow keeps busy teams organized with clean CRUD flows, drag-and-drop columns
 
 ## **Key Highlights**
 
-- **JWT-secured accounts** – Login, registration, logout, and password recovery using encrypted HTTP-only cookies and middleware-protected routes.
-- **Kanban-style task board** – To Do / In Progress / Completed columns with drag-and-drop, smart empty states, and real-time count updates.
-- **Task detail modal** – Click any task to reveal metadata, timestamps, description expansion, status shortcuts, edit/delete options, and more.
-- **Streamlined forms** – One reusable form for add/edit flows with client-side validation and prevention of invalid due dates.
-- **Email-based reset flow** – Nodemailer + crypto tokens implement a secure reset flow with time-bound tokens and verification.
-- **Search & filters** – Debounced search with instant feedback and clean UI messaging.
-- **Modern UX** – Skeleton loaders, modals, transitions, and consistent component patterns.
+- **OTP-verified signup** – 6-digit codes (5-minute expiry) sent via Nodemailer before accounts can log in.
+- **JWT-secured sessions** – Login, logout, change password, and password reset all use HTTP-only cookies for safety.
+- **Kanban-style task board** – Drag-and-drop columns with counts, debounced search, and empty states tuned for clarity.
+- **Task modal workflow** – Unified add/edit/view surface with validation, inline status changes, and delete confirmations.
+- **Strong password enforcement** – Regex validation on registration and change-password flows, with forced re-login after update.
+- **Testable from day one** – Manual test suites plus a ready-to-import Postman collection for API coverage.
 
 ---
 
 ## **Product Tour**
 
-### **Authentication & Access Control**
+### **Authentication & Security**
 
-- APIs under `/api/auth` handle registration, login, logout, and password resets.
-- Passwords hashed with **bcrypt** and stored securely.
-- Login issues a **JWT** signed via `JWT_SECRET`, stored as an HTTP-only cookie.
-- `middleware.ts` protects authenticated routes such as:
-
-  - `/dashboard`
-  - `/add`
-  - `/edit/[id]`
-
-- Forgot password flow:
-
-  - `/api/auth/forgot-password` → issues a time-limited token
-  - `/api/auth/reset-password` → verifies the token and updates the password
-
----
+- Registration issues a **6-digit OTP**; verification lives at `/verify-otp?email=<user>`.
+- Login sets a JWT in an **HTTP-only cookie**; logout clears it.
+- Change password UI at `/dashboard/update-password` calls a secure API and forces a new session.
+- Forgot/reset flow emails a **time-limited link**: request at `/forgot-password`, reset at `/reset-password/[token]`.
 
 ### **Dashboard & Task Board**
 
-- `/dashboard` shows all tasks grouped by status.
-- Drag tasks between columns; updates persist to the API.
-- Empty states appear with contextual messaging.
-- Debounced search filters by title & description.
-- Task cards show:
-
-  - Priority pills
-  - Due date
-  - Created timestamp
-  - Description preview
-  - Test-friendly `data-testid` selectors
-
----
+- `/dashboard` groups tasks by status (Pending, In Progress, Completed) with drag-and-drop moves.
+- Debounced search filters by title and description; counts update live per column.
+- Task cards surface priority, due date, timestamps, and a truncated description.
 
 ### **Task Creation & Editing**
 
-- `TaskForm` drives both create and edit pages.
-- Validates all fields, especially dates.
-- Edit flow loads with a skeleton UI.
-- Graceful “Task Not Found” handling for invalid IDs.
-
----
-
-### **Experience Enhancements**
-
-- Centralized logic in:
-
-  - `useTasks`
-  - `useTaskFilters`
-  - `useDebouncedValue`
-
-- Strong typing across client & server through shared TypeScript models.
-- Clean Tailwind utility-based UI with shared styles in `globals.css`.
+- A single modal drives add/edit/view/delete and status shortcuts.
+- Field validation guards invalid dates and empty inputs.
+- Search results stay in sync after every CRUD action.
 
 ---
 
 ## **Architecture**
 
-- **Frontend** – Next.js App Router with RSC + client components where needed
-- **API Layer** – Route handlers under `app/api` with REST-like patterns
-- **Database** – MongoDB + Mongoose for schema modeling
-- **Auth Strategy** – Stateless JWT in HTTP-only cookie
-- **Email System** – Nodemailer-based reset links
+- **Frontend** – Next.js App Router with a mix of server and client components.
+- **API Layer** – Route handlers under `app/api`, each validating JWT cookies for ownership.
+- **Database** – MongoDB with Mongoose models for `User` and `Task`.
+- **Auth Strategy** – Stateless JWT (HTTP-only cookie) plus OTP verification before first login.
+- **Email System** – Nodemailer (Gmail-ready) for OTP dispatch and password reset links.
 
 ---
 
@@ -119,23 +82,26 @@ Taskflow keeps busy teams organized with clean CRUD flows, drag-and-drop columns
 taskflow/
 ├── app/
 │   ├── api/
-│   │   ├── auth/                  # register, login, logout, forgot + reset
+│   │   ├── auth/
+│   │   │   ├── login/             # issue JWT cookie
+│   │   │   ├── logout/            # clear session cookie
+│   │   │   ├── register/          # create user + send OTP
+│   │   │   ├── verify-otp/        # validate 6-digit code
+│   │   │   ├── forgot-password/   # email reset token
+│   │   │   ├── reset-password/    # reset via token
+│   │   │   └── change-password/   # update password (JWT required)
 │   │   ├── me/                    # profile endpoint
-│   │   └── tasks/                 # task CRUD
-│   ├── add/                       # create task
-│   ├── dashboard/                 # kanban board
-│   ├── edit/[id]/                 # edit view
-│   ├── forgot-password/           # reset request
-│   ├── login/                     # login page
-│   ├── register/                  # sign-up page
+│   │   └── tasks/                 # list/create + /[id] CRUD
+│   ├── dashboard/                 # kanban board + modals
+│   │   └── update-password/       # UI for password change
+│   ├── login/ • register/ • verify-otp/ • forgot-password/
 │   └── reset-password/[token]/    # reset UI
-├── components/                    # TaskCard, TaskForm, Modal...
-├── hooks/                         # useTasks, useTaskFilters, debounce
-├── lib/                           # Mongo connection
+├── components/                    # TaskCard, TaskModal, Navbar, etc.
+├── hooks/                         # data fetching, forms, dnd helpers
+├── lib/                           # Mongo connection, auth helpers
 ├── models/                        # User + Task schemas
-├── utils/                         # Helpers for sorting/filtering
-├── middleware.ts                  # Route protection
-└── README.md
+├── testing/                       # Manual suites + Postman collection
+└── docs/manual-test-plan.md       # Suite index & environment notes
 ```
 
 ---
@@ -155,7 +121,7 @@ taskflow/
 git clone <repository-url>
 cd taskflow
 npm install
-cp .env.example .env   # or create one manually
+# create a .env file with the variables below
 ```
 
 ### **Run the App**
@@ -171,67 +137,63 @@ Visit:
 
 ## **Environment Variables**
 
-| Variable               | Required | Description                       |
-| ---------------------- | -------- | --------------------------------- |
-| `MONGODB_URI`          | ✅       | Full MongoDB connection string    |
-| `JWT_SECRET`           | ✅       | Secret used to sign JWT tokens    |
-| `NEXT_PUBLIC_BASE_URL` | ✅       | Base URL for password reset links |
-| `EMAIL_USER`           | ✅       | SMTP username                     |
-| `EMAIL_PASS`           | ✅       | SMTP password / app password      |
+| Variable               | Required | Description                               |
+| ---------------------- | -------- | ----------------------------------------- |
+| `MONGODB_URI`          | ✅       | Full MongoDB connection string            |
+| `JWT_SECRET`           | ✅       | Secret used to sign JWT tokens            |
+| `NEXT_PUBLIC_BASE_URL` | ✅       | Base URL for password reset links         |
+| `EMAIL_USER`           | ✅       | SMTP username (Gmail supported)           |
+| `EMAIL_PASS`           | ✅       | SMTP password or app password             |
 
-> **Gmail users:** Use an App Password for better security.
+> Gmail users: create and use an App Password; regular passwords are often blocked.
 
 ---
 
 ## **API Overview**
 
-| Method   | Endpoint                    | Description                         |
-| -------- | --------------------------- | ----------------------------------- |
-| `POST`   | `/api/auth/register`        | Create new user                     |
-| `POST`   | `/api/auth/login`           | Validate credentials + issue cookie |
-| `POST`   | `/api/auth/logout`          | Remove auth cookie                  |
-| `POST`   | `/api/auth/forgot-password` | Send reset email                    |
-| `POST`   | `/api/auth/reset-password`  | Verify token + set new password     |
-| `GET`    | `/api/me`                   | Get authenticated user              |
-| `GET`    | `/api/tasks`                | List user tasks                     |
-| `POST`   | `/api/tasks`                | Create task                         |
-| `GET`    | `/api/tasks/:id`            | Fetch task                          |
-| `PUT`    | `/api/tasks/:id`            | Update task                         |
-| `DELETE` | `/api/tasks/:id`            | Delete task                         |
+| Method            | Endpoint                       | Description                                      |
+| ----------------- | ------------------------------ | ------------------------------------------------ |
+| `POST`            | `/api/auth/register`           | Create user, hash password, email OTP            |
+| `POST`            | `/api/auth/verify-otp`         | Validate 6-digit OTP and mark user verified      |
+| `POST`            | `/api/auth/login`              | Validate credentials, issue JWT cookie           |
+| `POST`            | `/api/auth/logout`             | Clear auth cookie                                |
+| `POST`            | `/api/auth/change-password`    | Update password using current password + JWT     |
+| `POST`            | `/api/auth/forgot-password`    | Send password reset email with token link        |
+| `POST`            | `/api/auth/reset-password`     | Verify token + set new password                  |
+| `GET`             | `/api/me`                      | Get authenticated user (JWT cookie required)     |
+| `GET`             | `/api/tasks?search=<query>`    | List tasks for the logged-in user                |
+| `POST`            | `/api/tasks`                   | Create task                                      |
+| `GET / PUT / DELETE` | `/api/tasks/:id`            | Fetch, update, or delete a task                  |
 
 ---
 
-## **Available Scripts**
+## **Testing**
 
-| Command         | Description                      |
-| --------------- | -------------------------------- |
-| `npm run dev`   | Start dev server                 |
-| `npm run build` | Create production build          |
-| `npm start`     | Serve production build           |
-| `npm run lint`  | Lint with ESLint                 |
-| `npm test`      | Playwright tests (if configured) |
+- **Manual suites:** `testing/manual-testing` (per-feature `test-cases.md` plus shared notes in `docs/manual-test-plan.md`).
+- **API coverage:** Postman collection in `testing/api-testing/postman/taskflow API testing.postman_collection.json` with usage guide in the same folder.
+- **Automated:** `npm test` runs Playwright if configured in your environment.
 
 ---
 
 ## **Manual QA Checklist**
 
-- Register → log in → log out
-- Create tasks with all priority levels
-- Test validation errors
-- Drag tasks between columns
-- Confirm board counts update
-- Delete tasks → confirm modal
-- Test search bar
-- Reset password via email
-- Visit invalid `/edit/:id` route → error handling
+- Register a new user → receive OTP email → verify at `/verify-otp`.
+- Login, logout, and re-login to confirm cookie handling.
+- Request password reset email → complete `/reset-password/[token]`.
+- Change password from `/dashboard/update-password` → ensure session requires re-login.
+- Create/edit/delete tasks; move them across columns via drag-and-drop.
+- Validate search and column counts; confirm empty states render correctly.
+- Negative checks: invalid/expired OTP, expired reset token, and unauthorized task access.
 
 ---
 
-## **Further Backend Feature to Add**
+## **Future Enhancements**
 
-- Resend OTP Route
-- Rate Limiting
-- Cleanup the unverified user.
+- Resend OTP endpoint + UI hook-up for reliability.
+- Rate limiting on auth endpoints.
+- Cleanup for long-unverified users.
+
+---
 
 ## **Contributing**
 
@@ -250,5 +212,4 @@ Visit:
 
 ## **License**
 
-Distributed under the MIT License.
-Feel free to adapt Taskflow for portfolio, production, or learning use cases.
+Distributed under the MIT License. Feel free to adapt Taskflow for portfolio, production, or learning use cases.
