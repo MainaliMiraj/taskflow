@@ -3,6 +3,7 @@
 import AuthForm from "@/components/authComponent/AuthForm";
 import {useRegister} from "@/hooks/useRegister";
 import NavBar from "@/components/navbar/Navbar";
+import Link from "next/link";
 
 export default function RegisterPage() {
     const {handleRegister} = useRegister();
@@ -23,12 +24,12 @@ export default function RegisterPage() {
 
                     <p className="text-center text-sm mt-6 text-gray-700">
                         Already have an account?{" "}
-                        <a
+                        <Link
                             href="/login"
                             className="text-primary-600 hover:underline font-medium"
                         >
                             Login
-                        </a>
+                        </Link>
                     </p>
                 </div>
             </div>

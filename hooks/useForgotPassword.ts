@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 export const useForgotPassword = () => {
     const router = useRouter();
-    const { sendRequest, loading } = useApiRequest();
+    const {sendRequest, loading} = useApiRequest();
 
     const [email, setEmail] = useState("");
 
@@ -14,7 +14,7 @@ export const useForgotPassword = () => {
 
         await sendRequest({
             url: "/api/auth/forgot-password",
-            body: { email },
+            body: {email},
             successMessage: "If this email exists, a reset link has been sent.",
             onSuccess: () => router.push("/login"),
             onError: () => toast.error("Failed to send the reset link. Please try again.")
@@ -25,5 +25,6 @@ export const useForgotPassword = () => {
         handleSubmit,
         setEmail,
         loading,
+        email
     }
 }
