@@ -19,8 +19,17 @@ export default function ForgotPassword() {
                     </h2>
                     <form onSubmit={handleSubmit} className="space-y-4">
                         <div>
-                            <label className="text-md   text-primary-600">Email:</label>
+                            <label
+                                htmlFor="email"
+                                className="text-md text-primary-600"
+                            >
+                                Email:
+                            </label>
+
                             <input
+                                autoComplete={"email"}
+                                id="email"
+                                name="email"
                                 type="email"
                                 value={email}
                                 required
@@ -30,29 +39,33 @@ export default function ForgotPassword() {
                             />
                         </div>
 
-                        <button className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                                disabled={loading} aria-busy={loading}>
+                        <button
+                            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                            disabled={loading}
+                            aria-busy={loading}
+                        >
                             {loading ? (
                                 <div className="flex items-center justify-center gap-2">
-                                <span
-                                    className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"/>
+                                    <span
+                                        className="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full"/>
                                     Sending...
                                 </div>
                             ) : (
                                 "Send Reset Link"
                             )}
                         </button>
+
                         <Link
-                            href="/login" className={"text-primary-600 hover:underline text-md hover:text-primary-800"}
+                            href="/login"
+                            className="text-primary-600 hover:underline text-md hover:text-primary-800"
                         >
                             <div className="flex flex-row items-center gap-1 cursor-pointer mt-3">
-                                <RxArrowLeft className="text-md leading-none mt-1 "/>
-
+                                <RxArrowLeft className="text-md leading-none mt-1"/>
                                 <p>Back to Login</p>
                             </div>
-
                         </Link>
                     </form>
+
                 </div>
             </div>
         </>

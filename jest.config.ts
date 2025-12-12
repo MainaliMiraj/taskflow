@@ -11,6 +11,11 @@ const config: Config = {
     moduleNameMapper: {
         "^@/(.*)$": "<rootDir>/$1",
     },
+    testPathIgnorePatterns: [
+        "/node_modules/",
+        "/tests/"      // Ignore Playwright folder
+    ]
+
 };
 
 export default createJestConfig(config);
