@@ -17,7 +17,6 @@ test.describe('Login Page-Smoke Validation', () => {
         await expect(page.getByRole('link', {name: /create one/i})).toBeVisible();
         await expect(page.getByRole('link', {name: /reset password/i})).toBeVisible();
 
-
     });
 
 })

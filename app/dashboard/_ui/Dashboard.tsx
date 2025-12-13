@@ -6,13 +6,13 @@ import {useSearchParams} from "next/navigation";
 import SearchBar from "@/components/SearchBar";
 import TaskCard from "@/components/TaskCard";
 
-// hooks
+
 import {useGetTasks} from "@/hooks/useGetTasks";
 import {useDashboardSearch} from "./useDashboardSearch";
 import {useTaskSelection} from "./useTaskSelection";
 import {useTaskDragDrop} from "./useTaskDragDrop";
 
-// constants
+
 import {TASK_COLUMNS} from "./constants";
 import TaskCardSkeleton from "@/components/TaskCardSkeleton";
 import {useUpdateTasks} from "@/hooks/useUpdateTasks";
@@ -25,19 +25,18 @@ export default function Dashboard() {
     const {tasks, loading, fetchTasks} = useGetTasks();
     const [modalMode, setModalMode] = useState<"view" | "edit" | "add" | null>(null);
 
-    // Initial load
     useEffect(() => {
         fetchTasks(initialQuery);
     }, []);
 
-    // Search Logic
+
     const {searchTerm, setSearchTerm, submitSearch, clearSearch} = useDashboardSearch(initialQuery, fetchTasks);
 
-    // Modal
+
     const {selectedTask, setSelectedTask} = useTaskSelection(tasks);
     const {handleSubmit, isSubmitting} = useUpdateTasks(fetchTasks);
 
-    // Drag & Drop
+
     const {
         draggedOverStatus,
         setDraggedOverStatus,
@@ -64,6 +63,7 @@ export default function Dashboard() {
                             setSelectedTask(null);
                         }}
                         className="btn-primary rounded-none"
+                        data-testid={'add-task'}
                     >
                         + Add Task
                     </button>

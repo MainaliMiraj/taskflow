@@ -1,14 +1,14 @@
 import {test, expect} from "@playwright/test";
-import {apiLogin} from "@/tests/helpers/uiLogin";
+import {apiLogin} from "@/tests/helpers/uiLogin.helper";
 
 
-test.describe("Dashboard Header – Smoke Validation", () => {
+test.describe("Dashboard Header action", () => {
 
     test.beforeEach(async ({request, context}) => {
         await apiLogin(request, context);
     });
 
-    test("should render header with user info and actions", async ({page}) => {
+    test("should render header with user info and person actions", async ({page}) => {
         await page.goto("/dashboard");
 
         const header = page.locator("header");

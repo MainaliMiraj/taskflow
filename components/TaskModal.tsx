@@ -4,7 +4,7 @@ import {useEffect, useState} from "react";
 import type {Task, TaskPriority, TaskStatus} from "@/types/task";
 
 interface TaskModalProps {
-    task?: Task |null;
+    task?: Task | null;
     mode: "view" | "edit" | "add";
     onClose: () => void;
     onDelete?: (taskId: string) => void;
@@ -78,13 +78,14 @@ export default function TaskModal({
                 {/* Close */}
                 <button
                     className="absolute right-4 top-4 p-1 text-gray-500 hover:bg-slate-100"
-                    onClick={onClose}
+                    onClick={onClose} data-testid={'close-modal'}
                 >
                     ✕
                 </button>
 
                 {/* Header */}
-                <div className="bg-gradient-to-br from-white via-primary-50 to-white px-8 py-8">
+                <div className="bg-gradient-to-br from-white via-primary-50 to-white px-8 py-8"
+                     data-testid={'create-task-header'}>
                     <p className="font-extrabold text-primary-600 text-xl">
                         {isAddMode ? "Create Task" : "Task Overview"}
                     </p>
@@ -169,6 +170,7 @@ export default function TaskModal({
                                 <button
                                     className="bg-primary-600 text-white px-4 py-2"
                                     onClick={handleSave}
+                                    data-testid={'create-task'}
                                 >
                                     Create Task
                                 </button>
